@@ -1,6 +1,8 @@
 # Global Agent Rules (Codex)
 
-Project-specific `AGENTS.md` files override these rules.
+Project-specific `AGENTS.md` files override these rules. MUST also read
+`agents.local.md` next to each `AGENTS.md` (see Local Overrides in
+`shared/general.md`).
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 

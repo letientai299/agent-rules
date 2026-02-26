@@ -8,4 +8,5 @@ research needed — config-only edit."
 
 ## Before Starting a Code Task
 
-- Read and follow the project's `AGENTS.md` if it exists in the workspace root.
+- Discover and read project rule files (`AGENTS.md` and `agents.local.md`) per
+  the Local Overrides section in `shared/general.md`.

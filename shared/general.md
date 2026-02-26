@@ -71,14 +71,37 @@ guess.
 
 ## Local Overrides
 
-Two optional override files extend these rules (highest precedence last):
+### Machine-local
 
-- **Machine-local**: If `~/.agent-rules/local/agents.md` exists, MUST read it.
-  Contains machine-specific rules (e.g., toolchain preferences, paths). It MAY
-  reference other files within `~/.agent-rules/local/` using relative paths.
-- **Per-project**: If `agents.local.md` exists in the workspace root, MUST read
-  it after `AGENTS.md`. Contains personal or machine-specific project overrides.
-  Gitignored by the developer.
+If `~/.agent-rules/local/agents.md` exists, MUST read it. Contains
+machine-specific rules (e.g., toolchain preferences, paths). It MAY reference
+other files within `~/.agent-rules/local/` using relative paths.
+
+### Hierarchical project discovery
+
+In a monorepo, sub-packages may have their own `AGENTS.md` files. MUST walk
+from the workspace root down to the current working directory, reading rule
+files at each level:
+
+1. At each directory from root to CWD, read `AGENTS.md` then `agents.local.md`
+   (if they exist).
+2. Closer files (nearer to CWD) take higher precedence over farther ones.
+3. `agents.local.md` overrides `AGENTS.md` at the same level.
+
+Precedence (lowest → highest):
+
+```
+~/.agent-rules/shared/                 (global shared rules)
+~/.agent-rules/local/                  (machine-local overrides)
+<root>/AGENTS.md
+<root>/agents.local.md
+<root>/packages/api/AGENTS.md
+<root>/packages/api/agents.local.md
+  ...down to CWD
+```
+
+`agents.local.md` contains personal or machine-specific project overrides and
+SHOULD be gitignored by the developer.
 
 ## Git Safety
 
