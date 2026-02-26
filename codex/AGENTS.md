@@ -30,7 +30,9 @@ MUST read the language file(s) matching the current project:
 
 Read workflow files only when the session matches:
 
-- Multi-agent session → `~/.agent-rules/shared/workflows/multi-agent.md`
+- Multiple agents in the same worktree → `~/.agent-rules/shared/workflows/multi-agent.md`
+- Working in a git worktree → `~/.agent-rules/shared/workflows/worktree.md`
+- Running dev servers (especially in worktrees) → `~/.agent-rules/shared/workflows/dev-ports.md`
 - Code review requested → `~/.agent-rules/shared/workflows/code-review.md`
 - Design discussion or Q&A → `~/.agent-rules/shared/workflows/qa.md`
 - Writing documentation → `~/.agent-rules/shared/workflows/writing.md`

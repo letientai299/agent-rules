@@ -2,8 +2,9 @@
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
-Multiple AI agents MAY work on the same codebase concurrently. Follow these
-rules when committing or editing files.
+Multiple AI agents MAY work on the **same worktree** concurrently. Follow these
+rules when committing or editing files in a shared working directory. For agents
+in separate worktrees, see [worktree.md][worktree].
 
 ## File Ownership
 
@@ -39,3 +40,4 @@ in `general.md`. Additional multi-agent rules:
 - SHOULD minimize the read-edit gap — no unrelated work between read and edit.
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
+[worktree]: ./worktree.md

@@ -109,6 +109,8 @@ SHOULD be gitignored by the developer.
 - MUST NOT amend or rewrite shared history (`--amend`, `rebase -i`,
   `push --force`).
 - MUST run `git pull --rebase` before committing.
+- SHOULD use `--ff-only` when merging feature branches into the main branch.
+- SHOULD rebase feature branches onto `origin/main` before merging.
 
 ## Commits
 
