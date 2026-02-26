@@ -16,6 +16,12 @@ install_copilot() {
   backup_and_link "$REPO_ROOT/copilot/copilot-instructions.md" \
     "$TARGET_HOME/.copilot/copilot-instructions.md" "copilot"
 
+  # Hooks: symlink hooks directory and hooks.json
+  backup_and_link "$REPO_ROOT/copilot/hooks" \
+    "$TARGET_HOME/.copilot/hooks" "copilot"
+  backup_and_link "$REPO_ROOT/copilot/hooks.json" \
+    "$TARGET_HOME/.copilot/hooks.json" "copilot"
+
   # Verify
   echo
   echo -e "${BOLD}Verification${NC}"
@@ -25,12 +31,22 @@ install_copilot() {
     return
   fi
 
-  if [[ -L "$TARGET_HOME/.copilot/copilot-instructions.md" ]] && \
-     [[ -e "$TARGET_HOME/.copilot/copilot-instructions.md" ]]; then
-    log "OK: $TARGET_HOME/.copilot/copilot-instructions.md"
+  local failed=0
+  for link in "$TARGET_HOME/.copilot/copilot-instructions.md" \
+              "$TARGET_HOME/.copilot/hooks" \
+              "$TARGET_HOME/.copilot/hooks.json"; do
+    if [[ -L "$link" ]] && [[ -e "$link" ]]; then
+      log "OK: $link"
+    else
+      err "BROKEN: $link"
+      failed=1
+    fi
+  done
+
+  if [[ $failed -eq 0 ]]; then
     echo -e "${GREEN}All symlinks verified.${NC}"
   else
-    err "BROKEN: $TARGET_HOME/.copilot/copilot-instructions.md"
+    err "Some symlinks are broken."
     return 1
   fi
 }
