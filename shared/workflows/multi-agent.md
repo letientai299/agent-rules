@@ -3,25 +3,37 @@
 Multiple AI agents may work on the same codebase concurrently. Follow these
 rules when committing or editing files.
 
+## File Ownership
+
+- **Partition by file/module** — each agent owns distinct files. Coordinate at
+  the task level so no two agents edit the same file simultaneously.
+- **Shared files** (Makefile, lock files, project configs) are high-collision.
+  Edit them last, stage only your hunks, commit and push promptly.
+
+## Staging
+
+- **Never `git add -A` or `git add .`** — always name files explicitly.
+- **Files you fully own** — `git add <file>` is fine when every change in the
+  file is yours.
+- **Shared files** — use `git add -p <file>` to stage only your hunks. Another
+  agent may have added lines you shouldn't include.
+
 ## Commits
 
-- **Stage by hunks, not files** — `git add -p <file>` to stage only your changed
-  lines.
-- **Never `git add -A` or `git add .`** — always be explicit.
-- **Never stash** — affects the entire working tree.
+- **Pull before committing** — `git pull --rebase` to pick up other agents'
+  work. If the pull surfaces changes in files you also modified, re-read those
+  files and verify your edits still apply.
+- **Retry on conflict** — re-pull and re-stage instead of forcing.
 - **Never amend or rewrite shared history** — no `--amend`, `rebase -i`,
   `push --force`.
-- **Pull before committing** — `git pull --rebase`.
-- **Retry on conflict** — re-pull and re-stage instead of forcing.
+- **Never stash** — affects the entire working tree.
 - **Don't affect others' work** — never reset, clean, or checkout files you
   didn't modify.
-- **High-collision files** — lock files, project files, generated code. Avoid
-  unnecessary changes; commit and push promptly.
+- **Complete units** — each commit must build and make sense on its own. Don't
+  leave half-done work for another agent to fix.
 
 ## Atomic File Updates
 
-- **Check before editing** — `git diff <file>` or `stat -f '%m' <file>` to
-  detect changes since your last read. Only re-read if changed.
+- **Check before editing** — `git diff <file>` to detect changes since your last
+  read. Re-read if changed.
 - **Minimize the read-edit gap** — no unrelated work between read and edit.
-- **One agent per file at a time** — partition work by file/module to avoid
-  overlap.
