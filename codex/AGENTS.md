@@ -10,6 +10,9 @@ MUST read `~/.agent-rules/shared/general.md` at session start — contains
 coding standards, git safety, commit conventions, tooling detection, and
 artifact rules.
 
+If `~/.agent-rules/local/agents.md` exists, MUST also read it — contains
+machine-local overrides.
+
 ## Language Rules
 
 MUST read the language file(s) matching the current project:

@@ -1,0 +1,3 @@
+.ai.dump/
+local/*
+!local/.gitkeep

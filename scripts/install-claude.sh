@@ -54,6 +54,11 @@ install_claude() {
     backup_and_link "$f" "$rules_dir/$name" "claude/rules"
   done
 
+  # Symlink machine-local overrides if present
+  if [[ -f "$REPO_ROOT/local/agents.md" ]]; then
+    backup_and_link "$REPO_ROOT/local/agents.md" "$rules_dir/local.md" "claude/rules"
+  fi
+
   # Verify all symlinks resolve
   echo
   echo -e "${BOLD}Verification${NC}"

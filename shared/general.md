@@ -69,6 +69,17 @@ guess.
   `~/.agent-rules/shared/langs/typescript.md`
 - JSX/TSX files present → MUST also read `~/.agent-rules/shared/langs/react.md`
 
+## Local Overrides
+
+Two optional override files extend these rules (highest precedence last):
+
+- **Machine-local**: If `~/.agent-rules/local/agents.md` exists, MUST read it.
+  Contains machine-specific rules (e.g., toolchain preferences, paths). It MAY
+  reference other files within `~/.agent-rules/local/` using relative paths.
+- **Per-project**: If `agents.local.md` exists in the workspace root, MUST read
+  it after `AGENTS.md`. Contains personal or machine-specific project overrides.
+  Gitignored by the developer.
+
 ## Git Safety
 
 - MUST stage files by explicit path. MUST NOT use `git add -A` or `git add .`.
