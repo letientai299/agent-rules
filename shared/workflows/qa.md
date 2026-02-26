@@ -46,11 +46,13 @@ MUST NOT require the user to type the full filename — infer it from context.
   `[<topic>-q1.md #4](./<topic>-q1.md)`.
 - Research outputs go in `.ai.dump/<topic>.md` and SHOULD be linked from the Q
   file.
-- The user answers inline in the same file (below each **Question:** block).
+- Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
+  (see [Artifacts in general.md][artifacts]).
 - After reading answers, MUST create the next `q<num+1>.md` with follow-ups.
 - SHOULD keep a senior engineer voice — detailed analysis, reference links,
   concrete suggestions.
 - SHOULD update project docs (e.g., `docs/`) with resolved decisions; mark open
   items with links back to the Q file.
 
+[artifacts]: ../general.md#artifacts
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

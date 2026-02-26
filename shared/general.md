@@ -93,7 +93,11 @@ guess.
   MUST add an attribution line at the bottom: `_Written by <cli> (<model>)_` —
   e.g., `_Written by claude (claude-sonnet-4-20250514)_`. If co-writing or
   updating an existing file, append `_Updated by <cli> (<model>)_` instead.
-- SHOULD format markdown files (Q&A, reviews, research) with `prettier`. Use the
+- When an artifact contains items needing user decision (questions, review
+  findings, design choices), the first agent MUST add a `**Answer:**`
+  placeholder for each. Other agents updating the file later MUST NOT write into
+  `**Answer:**` placeholders — they are reserved for the user.
+- MUST format markdown files (Q&A, reviews, research) with `prettier`. Use the
   project's config if present, otherwise default settings.
 
 ## Research Verification

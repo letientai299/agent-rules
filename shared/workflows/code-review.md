@@ -36,6 +36,11 @@ MUST organize findings by severity:
 - If the fix applied differs from the original suggestion, MUST document the
   **Alternative** inline with a brief rationale.
 
+## Verdicts
+
+For each finding, MUST add an empty `**Answer:**` placeholder below the
+suggested fix (see [Artifacts in general.md][artifacts]).
+
 ## Tracking
 
 Each finding has a status. MUST update the review file as work progresses:
@@ -49,4 +54,5 @@ Each finding has a status. MUST update the review file as work progresses:
 MUST batch status updates — update all finding statuses in the review file once
 after completing all fixes, not after each individual fix.
 
+[artifacts]: ../general.md#artifacts
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
