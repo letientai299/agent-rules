@@ -1,5 +1,7 @@
 .PHONY: all claude codex copilot shared
 
+.DEFAULT_GOAL := claude
+
 all: claude codex copilot
 
 shared:
