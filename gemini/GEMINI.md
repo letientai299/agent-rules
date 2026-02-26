@@ -27,15 +27,19 @@ runner for build, test, lint, format commands. Ask if unclear, don't guess.
 - Never amend or rewrite shared history.
 - Pull before committing (`git pull --rebase`).
 
-## Language Rules
+## Shared Rules
 
-`~/.agent-rules/shared/` contains language-specific rules. Read **all** relevant
-files for the languages in use. React rules always apply alongside TypeScript
-when JSX/TSX files are present.
+Read all shared rules and workflows at session start:
 
-- Go → `~/.agent-rules/shared/go.md`
-- TypeScript → `~/.agent-rules/shared/typescript.md`
-- React → `~/.agent-rules/shared/react.md`
+@~/.agent-rules/shared/global-core.md
+@~/.agent-rules/shared/go.md
+@~/.agent-rules/shared/typescript.md
+@~/.agent-rules/shared/react.md
+@~/.agent-rules/shared/workflows/multi-agent.md
+@~/.agent-rules/shared/workflows/qa.md
+@~/.agent-rules/shared/workflows/research.md
+@~/.agent-rules/shared/workflows/code-review.md
+@~/.agent-rules/shared/workflows/writing.md
 
 ## Artifacts
 
