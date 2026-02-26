@@ -1,0 +1,53 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(mise build:*)",
+      "Bash(go build:*)",
+      "Bash(./bin/ado:*)",
+      "Bash(./target/debug/ado pr:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "WebSearch|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/mark-research.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/safe-git.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/check-research.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "effortLevel": "medium"
+}
