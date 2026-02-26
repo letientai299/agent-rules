@@ -129,6 +129,18 @@ Research is NOT needed for:
 When skipping, state the reason in one sentence (e.g., "No research needed —
 config-only edit.").
 
+## Dot Shorthand
+
+When the user sends `.` (a single period) as their entire message, interpret it
+by context:
+
+- **Waiting for answers/decisions** (Q&A, code review, design discussion) — the
+  user has answered inline in the relevant files. MUST re-read those files and
+  continue.
+- **Waiting for permission** to proceed (planning, coding, executing) — the user
+  means "go ahead." MUST proceed immediately.
+- **Any other context** — ambiguous. MUST ask the user to clarify.
+
 ## CLI
 
 - SHOULD use modern CLI tools (rg, fd, jq) when available and applicable.
