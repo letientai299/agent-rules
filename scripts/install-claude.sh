@@ -37,8 +37,15 @@ install_claude() {
     mkdir -p "$rules_dir"
   fi
 
-  # Symlink shared/global-core.md
-  backup_and_link "$REPO_ROOT/shared/global-core.md" "$rules_dir/global-core.md" "claude/rules"
+  # Remove stale symlinks (e.g., deleted shared files)
+  if [[ "$DRY_RUN" == true ]]; then
+    info "[dry-run] Would clean stale symlinks in $rules_dir/"
+  else
+    find "$rules_dir" -maxdepth 1 -type l ! -exec test -e {} \; -delete 2>/dev/null || true
+  fi
+
+  # Symlink shared/general.md
+  backup_and_link "$REPO_ROOT/shared/general.md" "$rules_dir/general.md" "claude/rules"
 
   # Symlink each shared/workflows/*.md
   for f in "$REPO_ROOT"/shared/workflows/*.md; do

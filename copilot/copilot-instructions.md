@@ -1,40 +1,31 @@
 # Global Agent Rules (Copilot)
 
-These are my global coding rules. Project-specific instructions override these.
+Project-specific instructions override these rules.
 
-## Coding
-
-- Prefer early-return over nested conditionals. Keep indentation minimal.
-- DRY. Extract shared helpers when structural patterns repeat.
-- Don't add useless code, comments, or dependencies.
-- Don't suppress lint warnings. If suppression is truly necessary, name the
-  specific rule and explain why in a comment.
-- Minimal code changes — don't refactor beyond what's needed.
-- Consult official docs for library/framework APIs and bug workarounds.
-- Use conventional commit messages without scope. State _why_, not _what_.
-- Use table-driven / parameterized tests. Prefer unit tests.
-
-## Tooling
-
-Detect the project's toolchain from files at the workspace root (mise.toml,
-bun.lock, pnpm-lock.yaml, go.mod, Cargo.toml, Makefile, ...). Use the detected
-runner for build, test, lint, format commands. Ask if unclear, don't guess.
-
-## Git Safety
-
-- Stage specific files, never `git add -A` or `git add .`.
-- Never amend or rewrite shared history.
-- Pull before committing (`git pull --rebase`).
+Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
 ## Shared Rules
 
-At session start, read **all** `.md` files in `~/.agent-rules/shared/` and
-`~/.agent-rules/shared/workflows/`. These contain language-specific rules, core
-coding rules, and workflow policies. Read all relevant language files for the
-languages in use. React rules always apply alongside TypeScript when JSX/TSX
-files are present.
+MUST read `~/.agent-rules/shared/general.md` at session start — contains
+coding standards, git safety, commit conventions, tooling detection, and
+artifact rules.
 
-## Artifacts
+## Language Rules
 
-- All generated artifacts (screenshots, notes, scratch work) go in `.ai.dump/`
-  at workspace root.
+MUST read the language file(s) matching the current project:
+
+- `go.mod` present → MUST read `~/.agent-rules/shared/langs/go.md`
+- `tsconfig.json` or `package.json` present → MUST read
+  `~/.agent-rules/shared/langs/typescript.md`
+- JSX/TSX files present → MUST also read `~/.agent-rules/shared/langs/react.md`
+
+## Workflow Rules
+
+Read workflow files only when the session matches:
+
+- Multi-agent session → `~/.agent-rules/shared/workflows/multi-agent.md`
+- Code review requested → `~/.agent-rules/shared/workflows/code-review.md`
+- Design discussion or Q&A → `~/.agent-rules/shared/workflows/qa.md`
+- Writing documentation → `~/.agent-rules/shared/workflows/writing.md`
+
+[rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

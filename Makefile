@@ -1,6 +1,6 @@
-.PHONY: all claude codex copilot gemini shared
+.PHONY: all claude codex copilot shared
 
-all: claude codex copilot gemini
+all: claude codex copilot
 
 shared:
 	./scripts/install-shared.sh
@@ -13,6 +13,3 @@ codex: shared
 
 copilot: shared
 	./scripts/install-copilot.sh
-
-gemini: shared
-	./scripts/install-gemini.sh
