@@ -21,6 +21,13 @@ exception: MUST save research and reports even in conversational sessions.
   links.
 - MUST NOT refactor beyond what the task requires.
 
+## File Editing
+
+- MUST use atomic file operations — read then edit in the tightest possible
+  sequence with no unrelated work in between.
+- SHOULD batch multiple edits to the same file in a single tool call rather than
+  issuing repeated calls.
+
 ## Quality
 
 - MUST ensure no lint issues. MUST NOT suppress warnings (`//nolint`,
@@ -105,7 +112,11 @@ SHOULD be gitignored by the developer.
 
 ## Git Safety
 
-- MUST stage files by explicit path. MUST NOT use `git add -A` or `git add .`.
+- MUST stage at hunk or line level (`git add -p`). MUST NOT use `git add -A`,
+  `git add .`, or whole-file `git add <file>` when the file contains unrelated
+  changes.
+- MUST confirm with the user before any git history modification (commit, amend,
+  squash, rebase, reset, revert, cherry-pick, etc.).
 - MUST NOT amend or rewrite shared history (`--amend`, `rebase -i`,
   `push --force`).
 - SHOULD use `--ff-only` when merging feature branches into the main branch.
