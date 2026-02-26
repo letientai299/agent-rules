@@ -1,5 +1,13 @@
 {
   "context": {
-    "fileName": ["AGENTS.md", "GEMINI.md"]
+    "fileName": [
+      "AGENTS.md",
+      "GEMINI.md"
+    ]
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
   }
 }

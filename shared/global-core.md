@@ -18,6 +18,8 @@
 
 ## Testing
 
+- Don't generate test code unnecessarily. Add tests only for new features and
+  bug fixes.
 - Use table-driven / parameterized tests.
 - Prefer unit tests. Use e2e tests only for complex flows.
 - Add benchmarks for performance-critical code.
