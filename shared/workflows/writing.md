@@ -19,5 +19,8 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 - MUST NOT surround file paths in output with punctuation like `.` or `,` —
   write `path/to/file` not `path/to/file.` so double-click selects the full path
   for terminal use.
+- MUST NOT use contrast fillers: "X, not just Y", "X, not merely Y", "X, not
+  only Y". State what X does. If Y matters, give it its own sentence.
+- SHOULD prefer short declarative sentences. Fragments are fine for list items.
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

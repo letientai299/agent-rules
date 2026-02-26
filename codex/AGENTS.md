@@ -8,9 +8,9 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
 ## Shared Rules
 
-MUST read `~/.agent-rules/shared/general.md` at session start — contains
-coding standards, git safety, commit conventions, tooling detection, and
-artifact rules.
+MUST read `~/.agent-rules/shared/general.md` at session start — contains coding
+standards, git safety, commit conventions, tooling detection, and artifact
+rules.
 
 If `~/.agent-rules/local/agents.md` exists, MUST also read it — contains
 machine-local overrides.
@@ -29,7 +29,9 @@ MUST read the language file(s) matching the current project:
 Read workflow files only when the session matches:
 
 <!-- ROUTING:START -->
+
 (generated during install)
+
 <!-- ROUTING:END -->
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

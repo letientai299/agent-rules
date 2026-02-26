@@ -6,7 +6,7 @@ When the user asks to review code (PR, file, diff, or general review):
 
 - MUST write the full review to `.ai.dump/review-<topic>.md`.
 - In conversation, MUST give only a brief summary (critical count, top issue)
-  and state the relative file path so the user knows where to find it.
+  and state the relative `filepath:line` so the user can quickly jump to it.
 
 ## Tone
 

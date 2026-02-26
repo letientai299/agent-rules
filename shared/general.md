@@ -86,9 +86,9 @@ other files within `~/.agent-rules/local/` using relative paths.
 
 ### Hierarchical project discovery
 
-In a monorepo, sub-packages may have their own `AGENTS.md` files. MUST walk
-from the workspace root down to the current working directory, reading rule
-files at each level:
+In a monorepo, sub-packages may have their own `AGENTS.md` files. MUST walk from
+the workspace root down to the current working directory, reading rule files at
+each level:
 
 1. At each directory from root to CWD, read `AGENTS.md` then `agents.local.md`
    (if they exist).
@@ -162,14 +162,9 @@ SHOULD be gitignored by the developer.
 
 ## Research Verification
 
-Before finishing a code task, MUST verify technical decisions against official
-docs using web search. This applies to:
-
-- Library/framework API usage — confirm method signatures, options, deprecations
-- Configuration formats — validate against current schema docs
-- Platform-specific behavior — check OS/runtime version compatibility
-
-Research is NOT needed for:
+Before finishing a code task, MUST verify claims, technical decisions against
+official docs, issues trackers, forum discussions using web search. Research is
+NOT needed for:
 
 - Config-only edits with no new APIs or libraries
 - Trivial changes (typos, formatting, renaming)
