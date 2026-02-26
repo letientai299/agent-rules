@@ -13,7 +13,8 @@ install_copilot() {
   mkdir -p "$TARGET_HOME/.copilot"
 
   # Copilot reads ~/.copilot/copilot-instructions.md for global instructions
-  backup_and_link "$REPO_ROOT/copilot/copilot-instructions.md" \
+  # Copy instead of symlink so we can inject the generated routing list
+  copy_with_routing "$REPO_ROOT/copilot/copilot-instructions.md" \
     "$TARGET_HOME/.copilot/copilot-instructions.md" "copilot"
 
   # Hooks: symlink hooks directory and hooks.json
@@ -32,8 +33,16 @@ install_copilot() {
   fi
 
   local failed=0
-  for link in "$TARGET_HOME/.copilot/copilot-instructions.md" \
-              "$TARGET_HOME/.copilot/hooks" \
+
+  # copilot-instructions.md is a generated copy, not a symlink
+  if [[ -f "$TARGET_HOME/.copilot/copilot-instructions.md" ]]; then
+    log "OK: $TARGET_HOME/.copilot/copilot-instructions.md"
+  else
+    err "MISSING: $TARGET_HOME/.copilot/copilot-instructions.md"
+    failed=1
+  fi
+
+  for link in "$TARGET_HOME/.copilot/hooks" \
               "$TARGET_HOME/.copilot/hooks.json"; do
     if [[ -L "$link" ]] && [[ -e "$link" ]]; then
       log "OK: $link"

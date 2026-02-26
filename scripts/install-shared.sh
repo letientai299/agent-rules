@@ -66,6 +66,63 @@ backup_and_link() {
   log "$label: $target → $source"
 }
 
+generate_routing_list() {
+  local workflows_dir="$REPO_ROOT/shared/workflows"
+  for f in "$workflows_dir"/*.md; do
+    local title
+    title="$(head -1 "$f" | sed 's/^# //')"
+    local basename
+    basename="$(basename "$f")"
+    echo "- $title → \`~/.agent-rules/shared/workflows/$basename\`"
+  done
+}
+
+# Copy a source file to target, replacing ROUTING markers with generated list.
+copy_with_routing() {
+  local source="$1"
+  local target="$2"
+  local label="$3"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    if [[ -e "$target" || -L "$target" ]]; then
+      info "[dry-run] Would backup $target → $BACKUP_DIR/"
+    fi
+    info "[dry-run] Would copy $source → $target (with routing list)"
+    return
+  fi
+
+  if [[ -e "$target" || -L "$target" ]]; then
+    mkdir -p "$BACKUP_DIR"
+    local backup_name
+    backup_name="$(basename "$target")"
+    local parent_label="${label//\//-}"
+    cp -RL "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || \
+      cp -R "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || true
+    warn "Backed up $target → $BACKUP_DIR/${parent_label}-${backup_name}"
+    rm -rf "$target"
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  cp "$source" "$target"
+
+  # Replace everything between ROUTING markers with the generated list
+  local routing_file
+  routing_file="$(mktemp)"
+  generate_routing_list > "$routing_file"
+
+  local tmpfile
+  tmpfile="$(mktemp)"
+  awk -v rfile="$routing_file" '
+    /<!-- ROUTING:START -->/ { print; while ((getline line < rfile) > 0) print line; skip=1; next }
+    /<!-- ROUTING:END -->/   { skip=0 }
+    !skip                    { print }
+  ' "$target" > "$tmpfile"
+  mv "$tmpfile" "$target"
+  rm -f "$routing_file"
+
+  log "$label: $target (copied + routing list generated)"
+}
+
 install_shared() {
   echo -e "${BOLD}Shared Rules${NC}"
   backup_and_link "$REPO_ROOT" "$TARGET_HOME/.agent-rules" "shared"

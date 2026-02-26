@@ -13,7 +13,8 @@ install_codex() {
   mkdir -p "$TARGET_HOME/.codex"
 
   # Codex uses a single AGENTS.md — no rules directory support
-  backup_and_link "$REPO_ROOT/codex/AGENTS.md" "$TARGET_HOME/.codex/AGENTS.md" "codex"
+  # Copy instead of symlink so we can inject the generated routing list
+  copy_with_routing "$REPO_ROOT/codex/AGENTS.md" "$TARGET_HOME/.codex/AGENTS.md" "codex"
 
   # Verify
   echo
@@ -24,7 +25,7 @@ install_codex() {
     return
   fi
 
-  if [[ -L "$TARGET_HOME/.codex/AGENTS.md" ]] && [[ -e "$TARGET_HOME/.codex/AGENTS.md" ]]; then
+  if [[ -e "$TARGET_HOME/.codex/AGENTS.md" ]]; then
     log "OK: $TARGET_HOME/.codex/AGENTS.md"
     echo -e "${GREEN}All symlinks verified.${NC}"
   else

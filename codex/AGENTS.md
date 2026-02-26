@@ -26,16 +26,10 @@ MUST read the language file(s) matching the current project:
 
 ## Workflow Rules
 
-<!-- TODO: auto-generate this list from shared/workflows/*.md during install -->
-
 Read workflow files only when the session matches:
 
-- Multiple agents in the same worktree → `~/.agent-rules/shared/workflows/multi-agent.md`
-- Working in a git worktree → `~/.agent-rules/shared/workflows/worktree.md`
-- Running dev servers (especially in worktrees) → `~/.agent-rules/shared/workflows/dev-ports.md`
-- Code review requested → `~/.agent-rules/shared/workflows/code-review.md`
-- Design discussion or Q&A → `~/.agent-rules/shared/workflows/qa.md`
-- Writing documentation → `~/.agent-rules/shared/workflows/writing.md`
-- Browser interaction or visual debugging → `~/.agent-rules/shared/workflows/browser.md`
+<!-- ROUTING:START -->
+(generated during install)
+<!-- ROUTING:END -->
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

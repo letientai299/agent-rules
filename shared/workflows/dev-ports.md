@@ -1,4 +1,4 @@
-# Deterministic Dev Ports
+# Running dev servers (especially in worktrees)
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 

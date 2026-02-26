@@ -1,4 +1,4 @@
-# Git Worktree Rules
+# Working in a git worktree
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 

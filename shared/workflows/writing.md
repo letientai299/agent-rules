@@ -1,4 +1,4 @@
-# Writing Docs
+# Writing documentation
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
