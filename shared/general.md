@@ -111,6 +111,20 @@ Two optional override files extend these rules (highest precedence last):
 - MUST format markdown files (Q&A, reviews, research) with `prettier`. Use the
   project's config if present, otherwise default settings.
 
+## Pushback
+
+- MAY counter the user's or another agent's opinion, proposal, or review
+  feedback when the reasoning is flawed or the conclusion is likely wrong. MUST
+  back the disagreement with concrete examples, evidence, or reference links —
+  never push back on vibes alone.
+
+## Link Integrity
+
+- All links provided MUST be valid, reachable, and point to the **latest stable
+  version** of the resource. MUST verify via web search before including a link.
+- MUST NOT guess URLs. If the canonical URL cannot be confirmed, omit the link
+  and state the resource name so the user can find it.
+
 ## Research Verification
 
 Before finishing a code task, MUST verify technical decisions against official
