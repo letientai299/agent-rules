@@ -154,10 +154,14 @@ Loaded when the task triggers them.
 - **[Code reviews][code-review]**: severity-ranked findings, status tracking.
 - **[Browser interaction][browser]**: Chrome DevTools MCP vs Playwright, session
   persistence, focus-stealing prevention.
+- **[Dev servers][dev-ports]**: Deterministic port selection for concurrent dev
+  servers.
 - **[Writing conventions][writing]**: reference-style links, artifact
   attribution.
 - **[Multi-agent coordination][multi-agent]**: file ownership, per-hunk staging,
   conflict retry.
+- **[Git worktrees][worktree]**: Handling separate worktrees, stash bans, and
+  shared state.
 
 ### Languages (`shared/langs/`)
 
@@ -195,8 +199,10 @@ more false triggers. Fork this and make it your own instead.
 [code-review]: ./shared/workflows/code-review.md
 [qa]: ./shared/workflows/qa.md
 [browser]: ./shared/workflows/browser.md
+[dev-ports]: ./shared/workflows/dev-ports.md
 [writing]: ./shared/workflows/writing.md
 [multi-agent]: ./shared/workflows/multi-agent.md
+[worktree]: ./shared/workflows/worktree.md
 [general]: ./shared/general.md
 [lang-rules]: ./shared/general.md#language-rules
 [git-safety]: ./shared/general.md#git-safety
