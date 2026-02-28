@@ -137,9 +137,18 @@ SHOULD be gitignored by the developer.
 - MUST save detailed research findings, comparisons, and long-form explanations
   to a markdown file in `.ai.dump/`, even in conversational sessions.
 - When creating or updating any artifact file (research, Q&A, code review, etc.)
-  MUST add an attribution line at the bottom: `_Written by <cli> (<model>)_` —
-  e.g., `_Written by claude (claude-sonnet-4-20250514)_`. If co-writing or
-  updating an existing file, append `_Updated by <cli> (<model>)_` instead.
+  MUST add an `## Authors` section at the bottom with list entries. When
+  creating a new file, add `- Written by <cli> (<model>) at <YYYY-MM-DD HH:MM>`.
+  When updating an existing file, append
+  `- Updated by <cli> (<model>) at <YYYY-MM-DD HH:MM>` on a new list item. Use
+  local time. List syntax prevents prettier from joining lines.
+
+  ```md
+  ## Authors
+
+  - Written by claude (claude-opus-4-6) at 2026-02-28 14:30
+  - Updated by claude (claude-sonnet-4-6) at 2026-03-01 09:15
+  ```
 - When an artifact contains items needing user decision (questions, review
   findings, design choices), the first agent MUST add a `**Answer:**`
   placeholder for each. Other agents updating the file later MUST NOT write into
