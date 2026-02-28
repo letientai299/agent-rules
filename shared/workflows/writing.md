@@ -5,8 +5,9 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 - MUST use **reference-style links** in Markdown, not inline. Keeps lines short.
   - Yes: `See [WhichKey][wk]` with `[wk]: https://...` at the bottom.
   - No: `See [WhichKey](https://github.com/folke/which-key.nvim)` inline.
-- SHOULD use **mermaid** for diagrams, not ASCII art. SHOULD NOT overuse
-  diagrams and tables (hard to maintain). Prefer clear text and lists.
+- MUST use **mermaid** for diagrams. MUST NOT use ASCII art diagrams. Mermaid is
+  editable in text editors, renders in browsers, and exports to SVG. SHOULD NOT
+  overuse diagrams and tables (hard to maintain). Prefer clear text and lists.
 - MUST NOT embed information that drifts as code changes (directory trees,
   version lists, counts, command output, etc.) in git-tracked docs. Instead,
   describe in prose, point to the source of truth, or generate at build time.
