@@ -113,11 +113,13 @@ SHOULD be gitignored by the developer.
 ## Git Safety
 
 - MUST NOT use `git add -A` or `git add .`. Before staging, run `git diff <file>`
-  to verify only your changes are present. When a file contains unrelated
-  changes, write only your hunks to a temp patch and stage them with
-  `git apply --cached <patch>`. MUST NOT stage hunks you did not author.
-- MUST confirm with the user before any git history modification (commit, amend,
-  squash, rebase, reset, revert, cherry-pick, etc.).
+  to verify only your changes are present. If the diff shows unexpected changes
+  you did not make in this session, stop and ask the user before staging. MAY
+  use `git apply --cached <patch>` to stage specific hunks when needed.
+- MUST NOT commit unless the user explicitly requests it. A prior commit request
+  does not authorize future auto-commits in subsequent tasks.
+- MUST confirm with the user before any history-rewriting operation (amend,
+  squash, rebase, reset, revert, cherry-pick, force-push).
 - MUST NOT amend or rewrite shared history (`--amend`, `rebase -i`,
   `push --force`).
 - SHOULD use `--ff-only` when merging feature branches into the main branch.
@@ -166,15 +168,17 @@ SHOULD be gitignored by the developer.
 ## Link Integrity
 
 - All links provided MUST be valid, reachable, and point to the **latest stable
-  version** of the resource. MUST verify via web search before including a link.
-- MUST NOT guess URLs. If the canonical URL cannot be confirmed, omit the link
-  and state the resource name so the user can find it.
+  version** of the resource. MUST verify via web search or HTTP check (`curl`,
+  `xh`, or `http`) before including a link. When neither web search nor HTTP
+  tools are available, MUST NOT guess URLs. Omit the link and state the resource
+  name so the user can find it.
 
 ## Research Verification
 
-Before finishing a code task, MUST verify claims, technical decisions against
-official docs, issues trackers, forum discussions using web search. Research is
-NOT needed for:
+Before finishing a code task, SHOULD verify non-trivial technical decisions (new
+API usage, unfamiliar library patterns, workarounds for known bugs) against
+official docs, issue trackers, or forum discussions using web search when
+available. Research is NOT needed for:
 
 - Config-only edits with no new APIs or libraries
 - Trivial changes (typos, formatting, renaming)

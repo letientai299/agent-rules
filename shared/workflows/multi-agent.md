@@ -8,8 +8,11 @@ in separate worktrees, see [worktree.md][worktree].
 
 ## File Ownership
 
-- SHOULD partition by file/module — each agent owns distinct files. Coordinate
-  at the task level so no two agents edit the same file simultaneously.
+- The task assigner (user or orchestrator) MUST partition work so no two agents
+  edit the same file simultaneously. Individual agents have no way to coordinate
+  with each other at runtime.
+- When an agent detects unexpected changes in a file it needs to edit
+  (`git diff` shows unrecognized edits), it MUST stop and ask the user.
 - Shared files (Makefile, lock files, project configs) are high-collision. MUST
   edit them last, stage only your hunks, commit and push promptly.
 
@@ -21,13 +24,12 @@ Core staging rules (MUST NOT `git add -A`, MUST diff before staging) live in
 - Files you fully own — `git add <file>` is fine when every change in the file
   is yours.
 - Shared files — MUST `git diff <file>` before staging. If the diff contains
-  changes from another agent, write only your hunks to a temp patch and
-  `git apply --cached <patch>`. MUST NOT stage another agent's work.
+  changes you did not make, stop and ask the user. MAY use
+  `git apply --cached <patch>` to stage specific hunks when directed.
 
 ## Commits
 
-Core commit rules (MUST pull before commit, MUST NOT amend shared history) live
-in `general.md`. Additional multi-agent rules:
+Additional multi-agent commit rules:
 
 - MUST retry on conflict — re-pull and re-stage instead of forcing.
 - MUST NOT stash — affects the entire working tree.

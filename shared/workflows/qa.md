@@ -8,8 +8,8 @@ MUST automatically start a Q&A file (without being asked) when ANY of these
 apply:
 
 - The task is unclear or ambiguous
-- The code change spans more than 5 files or touches more than ~30 lines of
-  logic
+- The code change is expected to span more than 5 files or involve significant
+  logic changes
 - There are multiple valid approaches with different trade-offs
 - The task involves architectural or design decisions
 - The user explicitly says "discuss", "review design", "qa", or "q&a"
@@ -49,8 +49,8 @@ MUST NOT require the user to type the full filename — infer it from context.
 - Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
   (see [Artifacts in general.md][artifacts]).
 - After reading answers, MUST create the next `q<num+1>.md` with follow-ups.
-- SHOULD keep a senior engineer voice — detailed analysis, reference links,
-  concrete suggestions.
+- SHOULD provide detailed analysis with reference links and concrete suggestions.
+  MUST NOT waste tokens on praise, compliments, or discussing what works well.
 - SHOULD update project docs (e.g., `docs/`) with resolved decisions; mark open
   items with links back to the Q file.
 

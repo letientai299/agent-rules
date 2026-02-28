@@ -17,31 +17,32 @@ When either tool works, SHOULD prefer the one already configured in the session.
 
 ## Browser Channel
 
-MUST use a non-default Chrome channel (canary or beta) so the agent does not
-block the user from launching their default Chrome profile via Launchpad. Use
-`--channel=canary` (preferred) or `--channel=beta`.
+The MCP browser server SHOULD be configured to use a non-default Chrome channel
+(canary or beta) so the agent does not block the user's default Chrome profile.
+When launching a browser programmatically, pass `--channel=canary` (preferred) or
+`--channel=beta` if the tool supports it.
 
 ## Session & Auth
 
-- MUST use a stable persistent profile so auth tokens, cookies, and
-  customizations survive across sessions.
-- MUST NOT launch throwaway/incognito contexts for auth-required sites.
+- The MCP browser server SHOULD be configured with a persistent profile directory
+  so auth tokens, cookies, and customizations survive across sessions.
+- MUST NOT launch throwaway/incognito contexts for auth-required sites when the
+  tool offers the choice.
 - When sharing a session with the user, MUST attach to the existing browser
   instance — MUST NOT spawn a second browser window.
 
 ## Port Management
 
-- MUST start browser MCP with a random CDP port (or let the tool auto-assign) to
-  avoid conflicts with other agent instances.
-- MUST NOT hardcode well-known ports (9222, 9229) unless explicitly instructed.
+- The MCP browser server SHOULD be configured with a random or auto-assigned CDP
+  port. MUST NOT hardcode well-known ports (9222, 9229) in MCP configuration
+  unless explicitly instructed.
 
 ## Focus & Disruption
 
-- MUST NOT let browser windows steal OS focus from the user.
-  - Chrome DevTools MCP `--autoConnect`: attaches without spawning a new window.
-  - Playwright MCP: use `--headless` for background work; for headful work, warn
-    the user that focus stealing is unavoidable.
-- When headful operation is required, SHOULD inform the user before launching.
+- SHOULD minimize focus disruption. Use `--autoConnect` with Chrome DevTools MCP.
+  Use `--headless` with Playwright when possible.
+- When headful operation is required, SHOULD warn the user that focus stealing
+  may occur.
 
 ## Screenshots & Artifacts
 
