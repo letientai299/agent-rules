@@ -112,9 +112,10 @@ SHOULD be gitignored by the developer.
 
 ## Git Safety
 
-- MUST stage at hunk or line level (`git add -p`). MUST NOT use `git add -A`,
-  `git add .`, or whole-file `git add <file>` when the file contains unrelated
-  changes.
+- MUST NOT use `git add -A` or `git add .`. Before staging, run `git diff <file>`
+  to verify only your changes are present. When a file contains unrelated
+  changes, write only your hunks to a temp patch and stage them with
+  `git apply --cached <patch>`. MUST NOT stage hunks you did not author.
 - MUST confirm with the user before any git history modification (commit, amend,
   squash, rebase, reset, revert, cherry-pick, etc.).
 - MUST NOT amend or rewrite shared history (`--amend`, `rebase -i`,

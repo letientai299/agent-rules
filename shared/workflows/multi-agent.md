@@ -15,13 +15,14 @@ in separate worktrees, see [worktree.md][worktree].
 
 ## Staging
 
-Core staging rules (MUST stage by path, MUST NOT `git add -A`) live in
+Core staging rules (MUST NOT `git add -A`, MUST diff before staging) live in
 `general.md`. Additional multi-agent rules:
 
 - Files you fully own — `git add <file>` is fine when every change in the file
   is yours.
-- Shared files — MUST use `git add -p <file>` to stage only your hunks. Another
-  agent may have added lines you MUST NOT include.
+- Shared files — MUST `git diff <file>` before staging. If the diff contains
+  changes from another agent, write only your hunks to a temp patch and
+  `git apply --cached <patch>`. MUST NOT stage another agent's work.
 
 ## Commits
 
