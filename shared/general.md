@@ -75,6 +75,7 @@ guess.
 - `tsconfig.json` or `package.json` present → MUST read
   `~/.agent-rules/shared/langs/typescript.md`
 - JSX/TSX files present → MUST also read `~/.agent-rules/shared/langs/react.md`
+- `.csproj` or `.sln` present → MUST read `~/.agent-rules/shared/langs/csharp.md`
 
 ## Local Overrides
 
