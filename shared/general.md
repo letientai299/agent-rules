@@ -154,6 +154,9 @@ configuration over many specialized variants.
 
 ## File Editing
 
+- MUST re-read a file before editing if any turns have passed since the last
+  read. The user or another agent may have modified it. MUST NOT edit from
+  memory alone.
 - MUST use atomic file operations — read then edit in the tightest possible
   sequence with no unrelated work in between.
 - SHOULD batch multiple edits to the same file in a single tool call rather than
