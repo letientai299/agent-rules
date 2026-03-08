@@ -30,6 +30,15 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 ## Testing
 
 - MUST NOT assert on exception message strings. Messages are not public API.
+- MUST use `Assert` methods (e.g., `Assert.Contains`) instead of legacy
+  `StringAssert`, `CollectionAssert`, etc. when the test framework provides
+  modern equivalents.
+
+## Formatting
+
+- MUST run `csharpier` on changed files before finishing a task. The Write tool
+  does not respect `.editorconfig` continuation-line rules, so auto-fix is
+  required.
 
 ## Comments
 
