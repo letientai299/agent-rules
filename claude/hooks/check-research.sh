@@ -22,7 +22,6 @@ fi
 # First time — warn and block
 touch "$WARNED"
 cat >&2 <<'MSG'
-Before finishing, if you haven't, use WebSearch to verify technical decisions
-against official docs. If this task genuinely needs no research, justify.
+Use WebSearch to verify technical decisions against official docs, or explain why it's unnecessary
 MSG
 exit 2
