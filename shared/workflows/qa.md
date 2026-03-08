@@ -20,39 +20,50 @@ directory. MUST keep temp files in `.ai.dump/`, never in the repo root.
 
 ## File Naming
 
-- MUST auto-generate filenames: `.ai.dump/<topic>-q<num>.md`
+- MUST place Q&A files under `.ai.dump/<topic>/q<num>.md`.
   - `<topic>` = short kebab-case slug derived from the task (e.g., `auth-flow`,
-    `palette-ux`)
-  - `<num>` = sequential within that topic (q1, q2, q3, ...)
-  - MUST check existing `.ai.dump/` files to avoid collisions and continue
-    numbering
+    `palette-ux`).
+  - `<num>` = sequential within that topic (q1, q2, q3, ...).
+  - MUST check existing `.ai.dump/<topic>/` files to continue numbering.
 
 ## File Picking
 
-When the user references a Q&A topic (e.g., "check qa", "continue the auth
-discussion"):
-
-- MUST scan `.ai.dump/` for matching files by topic keyword.
-- If exactly one match: use it. MUST mention the relative path in your response.
-- If multiple matches: MUST ask the user to pick using a combobox.
-- If no match: tell the user no matching Q&A file was found.
-
-MUST NOT require the user to type the full filename — infer it from context.
+Follow the [artifact lookup rules][artifacts] in general.md. Additionally, when
+the user says "continue the discussion" or "check qa" without naming a topic,
+MUST infer the topic from the current conversation and open the latest
+`q<num>.md` in that topic folder.
 
 ## Process
 
-- Questions go in `.ai.dump/<topic>-q<num>.md` files.
+- Questions go in `.ai.dump/<topic>/q<num>.md` files.
 - SHOULD cross-reference earlier files with relative links:
-  `[<topic>-q1.md #4](./<topic>-q1.md)`.
-- Research outputs go in `.ai.dump/<topic>.md` and SHOULD be linked from the Q
-  file.
+  `[q1.md #4](./q1.md)`.
+- Research outputs go in `.ai.dump/<topic>/research.md` and SHOULD be linked
+  from the Q file.
 - Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
   (see [Artifacts in general.md][artifacts]).
-- After reading answers, MUST create the next `q<num+1>.md` with follow-ups.
 - SHOULD provide detailed analysis with reference links and concrete suggestions.
   MUST NOT waste tokens on praise, compliments, or discussing what works well.
 - SHOULD update project docs (e.g., `docs/`) with resolved decisions; mark open
   items with links back to the Q file.
+
+## Continuing a Discussion
+
+When the user answers some questions and continues (e.g., `.` or "continue"):
+
+1. Re-read the current `q<num>.md`.
+2. Check for unanswered `**Answer:**` placeholders.
+3. If unanswered questions remain:
+   - Evaluate whether the new answers invalidate, expand, or make remaining
+     questions irrelevant.
+   - Revise or remove affected questions **in the same file**. Mark removed
+     questions with ~~strikethrough~~ and a one-line reason.
+   - Add new follow-up questions (if any) to the **same file**, below the
+     existing questions.
+   - MUST NOT create `q<num+1>.md` until every question in the current file is
+     answered or struck through.
+4. Only when all questions in the current file are resolved, create
+   `q<num+1>.md` for the next round of follow-ups.
 
 [artifacts]: ../general.md#artifacts
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

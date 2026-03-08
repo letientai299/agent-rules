@@ -14,12 +14,37 @@ exception: MUST save research and reports even in conversational sessions.
 ## Style
 
 - SHOULD prefer early-return over nested conditionals. Keep indentation minimal.
-- MUST NOT duplicate code. Extract shared helpers when structural patterns
-  repeat.
 - MUST NOT add useless code, comments, or dependencies.
 - SHOULD add detailed comments only for non-trivial logic. Include reference
   links.
 - MUST NOT refactor beyond what the task requires.
+
+## DRY and Single Responsibility
+
+- MUST NOT duplicate code. Extract shared helpers when structural patterns
+  repeat.
+- **Search before writing:** before adding a new function, type, or module, MUST
+  search the codebase for existing implementations that serve the same purpose.
+  Use the most accurate method available, in order of preference:
+  1. LSP tools (find references, go-to-definition) when an MCP language server
+     is available.
+  2. Language-specific CLI: `tsc --noEmit` (TS), `go vet` / `staticcheck` (Go),
+     `cargo check` (Rust) — these understand types, not just text.
+  3. AST-aware search or duplication detectors (`jscpd`, `golangci-lint` with
+     `dupl` linter) when configured in the project.
+  4. Grep/Glob as a last resort — effective for names but misses structural
+     duplicates.
+- **Single Responsibility indicators** — split when ANY of these apply:
+  - A function has multiple unrelated reasons to change.
+  - A file exports symbols that serve different concerns (e.g., parsing and
+    rendering in the same module).
+  - A function takes a boolean or mode flag that switches between two unrelated
+    behaviors — split into two functions.
+- **Post-change verification:** after extracting or consolidating shared code,
+  MUST run the project's type checker / compiler before running the full test
+  suite to catch breakage early.
+- When reviewing code (own or others'), MUST flag DRY / SRP violations as
+  **Important** findings. A duplicated bug that requires two fixes is a defect.
 
 ## File Editing
 
@@ -133,11 +158,23 @@ SHOULD be gitignored by the developer.
 
 ## Artifacts
 
-- All generated artifacts (screenshots, notes, scratch work, reports) MUST go in
-  `.ai.dump/` at the workspace root. MUST NOT place them in the repo root or
-  `tmp/`. `.ai.dump/` is gitignored and disposable.
+- All generated artifacts MUST go under `.ai.dump/<topic>/` at the workspace
+  root, where `<topic>` is a short kebab-case slug derived from the task (e.g.,
+  `auth-flow`, `palette-ux`). MUST NOT place them in the repo root, `tmp/`, or
+  directly in `.ai.dump/`. `.ai.dump/` is gitignored and disposable.
+- MUST check existing `.ai.dump/` subdirectories to avoid collisions and reuse
+  an existing `<topic>/` folder when the work is related.
+- **Artifact lookup:** when the user references an artifact by partial name
+  (e.g., "check the research", "see q2", "read the review") without specifying
+  the topic folder:
+  1. Infer `<topic>` from the current conversation context.
+  2. Look for the file inside `.ai.dump/<topic>/`.
+  3. If no conversation context or no match, scan all `.ai.dump/*/` for the
+     basename. One match → use it. Multiple → ask the user to pick. None →
+     report not found.
 - MUST save detailed research findings, comparisons, and long-form explanations
-  to a markdown file in `.ai.dump/`, even in conversational sessions.
+  to `.ai.dump/<topic>/research.md` (or a more specific name), even in
+  conversational sessions.
 - When creating or updating any artifact file (research, Q&A, code review, etc.)
   MUST add an `## Authors` section at the bottom with list entries. When
   creating a new file, add `- Written by <cli> (<model>) at <YYYY-MM-DD HH:MM>`.

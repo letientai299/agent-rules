@@ -4,7 +4,7 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
 When the user asks to review code (PR, file, diff, or general review):
 
-- MUST write the full review to `.ai.dump/review-<topic>.md`.
+- MUST write the full review to `.ai.dump/<topic>/review.md`.
 - In conversation, MUST give only a brief summary (critical count, top issue)
   and state the relative `filepath:line` so the user can quickly jump to it.
 
@@ -19,12 +19,15 @@ MUST organize findings by severity:
 
 1. **Critical** — bugs, security vulnerabilities, data loss risks, crashes
 2. **Important** — logic errors, missing edge cases, performance problems, API
-   misuse
+   misuse, DRY violations (duplicated logic), SRP violations (mixed concerns)
 3. **Minor** — style violations, naming, readability, unnecessary complexity
 
 ## Format
 
-- MUST reference specific `file:line` locations.
+- MUST reference specific `file:line` locations using relative paths from the
+  workspace root (e.g., `src/utils/parse.ts:42`). In the review markdown file,
+  MUST use relative-path links so the reader can navigate directly (e.g.,
+  `[src/utils/parse.ts:42](../../src/utils/parse.ts)`).
 - MUST quote the problematic code snippet for **Critical** and **Important**
   findings only. For **Minor** findings, reference `file:line` without quoting.
 - MUST explain why it's a problem. SHOULD add online valid reference links.
