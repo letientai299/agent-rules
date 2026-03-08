@@ -7,9 +7,87 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 These rules apply **only when working on a code project** (i.e., the workspace
 has source files you are creating or modifying). When the session is purely
 conversational — general questions, research, brainstorming, or anything that
-doesn't produce code changes — skip project-specific steps like linting,
-formatting, building, and reading `AGENTS.md`. The **Artifacts** section is an
-exception: MUST save research and reports even in conversational sessions.
+doesn't produce code changes — skip everything under **Code Projects** below.
+The remaining sections (Artifacts, Pushback, Link Integrity, Research
+Verification, CLI) always apply.
+
+## Artifacts
+
+- All generated artifacts MUST go under `.ai.dump/<topic>/` at the workspace
+  root, where `<topic>` is a short kebab-case slug derived from the task (e.g.,
+  `auth-flow`, `palette-ux`). MUST NOT place them in the repo root, `tmp/`, or
+  directly in `.ai.dump/`. `.ai.dump/` is gitignored and disposable.
+- MUST check existing `.ai.dump/` subdirectories to avoid collisions and reuse
+  an existing `<topic>/` folder when the work is related.
+- **Artifact lookup:** when the user references an artifact by partial name
+  (e.g., "check the research", "see q2", "read the review") without specifying
+  the topic folder:
+  1. Infer `<topic>` from the current conversation context.
+  2. Look for the file inside `.ai.dump/<topic>/`.
+  3. If no conversation context or no match, scan all `.ai.dump/*/` for the
+     basename. One match → use it. Multiple → ask the user to pick. None →
+     report not found.
+- MUST save detailed research findings, comparisons, and long-form explanations
+  to `.ai.dump/<topic>/research.md` (or a more specific name), even in
+  conversational sessions.
+- When creating or updating any artifact file (research, Q&A, code review, etc.)
+  MUST add an `## Authors` section at the bottom with list entries. When
+  creating a new file, add `- Written by <cli> (<model>) at <YYYY-MM-DD HH:MM>`.
+  When updating an existing file, append
+  `- Updated by <cli> (<model>) at <YYYY-MM-DD HH:MM>` on a new list item. Use
+  local time. List syntax prevents prettier from joining lines.
+
+  ```md
+  ## Authors
+
+  - Written by claude (claude-opus-4-6) at 2026-02-28 14:30
+  - Updated by claude (claude-sonnet-4-6) at 2026-03-01 09:15
+  ```
+- When an artifact contains items needing user decision (questions, review
+  findings, design choices), the first agent MUST add a `**Answer:**`
+  placeholder for each. Other agents updating the file later MUST NOT write into
+  `**Answer:**` placeholders — they are reserved for the user.
+- MUST format markdown files (Q&A, reviews, research) with `prettier`. Use the
+  project's config if present, otherwise default settings.
+
+## Pushback
+
+- MAY counter the user's or another agent's opinion, proposal, or review
+  feedback when the reasoning is flawed or the conclusion is likely wrong. MUST
+  back the disagreement with concrete examples, evidence, or reference links —
+  never push back on vibes alone.
+
+## Link Integrity
+
+- All links provided MUST be valid, reachable, and point to the **latest stable
+  version** of the resource. MUST verify via web search or HTTP check (`curl`,
+  `xh`, or `http`) before including a link. When neither web search nor HTTP
+  tools are available, MUST NOT guess URLs. Omit the link and state the resource
+  name so the user can find it.
+
+## Research Verification
+
+Before finishing a code task, SHOULD verify non-trivial technical decisions (new
+API usage, unfamiliar library patterns, workarounds for known bugs) against
+official docs, issue trackers, or forum discussions using web search when
+available. Research is NOT needed for:
+
+- Config-only edits with no new APIs or libraries
+- Trivial changes (typos, formatting, renaming)
+- Tasks entirely within well-known project code (no external dependencies)
+
+When skipping, state the reason in one sentence (e.g., "No research needed —
+config-only edit.").
+
+## CLI
+
+- SHOULD use modern CLI tools (rg, fd, jq) when available and applicable.
+
+---
+
+# Code Projects
+
+Sections below apply only when working on a code project. See Scope Guard.
 
 ## Style
 
@@ -45,6 +123,18 @@ exception: MUST save research and reports even in conversational sessions.
   suite to catch breakage early.
 - When reviewing code (own or others'), MUST flag DRY / SRP violations as
   **Important** findings. A duplicated bug that requires two fixes is a defect.
+
+## API Design
+
+Minimal API surface, deep flexibility. Prefer fewer entry points with composable
+configuration over many specialized variants.
+
+- Instead of `find_user_by_name_exact`, `find_user_by_name_contains`,
+  `find_user_by_name_prefix` — use `find_user(query)` where `query` describes
+  the match strategy.
+- Instead of `do_something(opt1, opt2, opt3)` that breaks when adding `opt4` —
+  use a config object or functional options pattern so new options are additive,
+  not breaking.
 
 ## File Editing
 
@@ -155,77 +245,5 @@ SHOULD be gitignored by the developer.
 - MUST use conventional commit messages without scope (e.g., `fix:`, not
   `fix(ext):`). State _why_, not _what_. Subject ≤50 chars. Body wrapped at 80
   chars.
-
-## Artifacts
-
-- All generated artifacts MUST go under `.ai.dump/<topic>/` at the workspace
-  root, where `<topic>` is a short kebab-case slug derived from the task (e.g.,
-  `auth-flow`, `palette-ux`). MUST NOT place them in the repo root, `tmp/`, or
-  directly in `.ai.dump/`. `.ai.dump/` is gitignored and disposable.
-- MUST check existing `.ai.dump/` subdirectories to avoid collisions and reuse
-  an existing `<topic>/` folder when the work is related.
-- **Artifact lookup:** when the user references an artifact by partial name
-  (e.g., "check the research", "see q2", "read the review") without specifying
-  the topic folder:
-  1. Infer `<topic>` from the current conversation context.
-  2. Look for the file inside `.ai.dump/<topic>/`.
-  3. If no conversation context or no match, scan all `.ai.dump/*/` for the
-     basename. One match → use it. Multiple → ask the user to pick. None →
-     report not found.
-- MUST save detailed research findings, comparisons, and long-form explanations
-  to `.ai.dump/<topic>/research.md` (or a more specific name), even in
-  conversational sessions.
-- When creating or updating any artifact file (research, Q&A, code review, etc.)
-  MUST add an `## Authors` section at the bottom with list entries. When
-  creating a new file, add `- Written by <cli> (<model>) at <YYYY-MM-DD HH:MM>`.
-  When updating an existing file, append
-  `- Updated by <cli> (<model>) at <YYYY-MM-DD HH:MM>` on a new list item. Use
-  local time. List syntax prevents prettier from joining lines.
-
-  ```md
-  ## Authors
-
-  - Written by claude (claude-opus-4-6) at 2026-02-28 14:30
-  - Updated by claude (claude-sonnet-4-6) at 2026-03-01 09:15
-  ```
-- When an artifact contains items needing user decision (questions, review
-  findings, design choices), the first agent MUST add a `**Answer:**`
-  placeholder for each. Other agents updating the file later MUST NOT write into
-  `**Answer:**` placeholders — they are reserved for the user.
-- MUST format markdown files (Q&A, reviews, research) with `prettier`. Use the
-  project's config if present, otherwise default settings.
-
-## Pushback
-
-- MAY counter the user's or another agent's opinion, proposal, or review
-  feedback when the reasoning is flawed or the conclusion is likely wrong. MUST
-  back the disagreement with concrete examples, evidence, or reference links —
-  never push back on vibes alone.
-
-## Link Integrity
-
-- All links provided MUST be valid, reachable, and point to the **latest stable
-  version** of the resource. MUST verify via web search or HTTP check (`curl`,
-  `xh`, or `http`) before including a link. When neither web search nor HTTP
-  tools are available, MUST NOT guess URLs. Omit the link and state the resource
-  name so the user can find it.
-
-## Research Verification
-
-Before finishing a code task, SHOULD verify non-trivial technical decisions (new
-API usage, unfamiliar library patterns, workarounds for known bugs) against
-official docs, issue trackers, or forum discussions using web search when
-available. Research is NOT needed for:
-
-- Config-only edits with no new APIs or libraries
-- Trivial changes (typos, formatting, renaming)
-- Tasks entirely within well-known project code (no external dependencies)
-
-When skipping, state the reason in one sentence (e.g., "No research needed —
-config-only edit.").
-
-## CLI
-
-- SHOULD use modern CLI tools (rg, fd, jq) when available and applicable.
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
