@@ -83,6 +83,22 @@ config-only edit.").
 
 - SHOULD use modern CLI tools (rg, fd, jq) when available and applicable.
 
+## Workflows
+
+MUST read the relevant workflow file when the situation matches. All paths are
+relative to `~/.agent-rules/shared/workflows/`.
+
+| Situation                                        | File              |
+| ------------------------------------------------ | ----------------- |
+| Writing or editing markdown (docs, READMEs, etc) | `writing.md`      |
+| Design discussion, ambiguous task, Q&A           | `qa.md`           |
+| Code review (PR, file, diff)                     | `code-review.md`  |
+| Browser interaction or visual debugging          | `browser.md`      |
+| Interactive CLI/TUI tool (vim, fzf, less, REPLs) | `tmux-tui.md`     |
+| Running dev servers (especially in worktrees)    | `dev-ports.md`    |
+| Working in a git worktree                        | `worktree.md`     |
+| Multiple agents in the same worktree             | `multi-agent.md`  |
+
 ---
 
 # Code Projects
