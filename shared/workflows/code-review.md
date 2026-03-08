@@ -7,10 +7,10 @@ When the user asks to review code (PR, file, diff, or general review):
 - MUST write the full review to `.ai.dump/<topic>/review-r<num>.md` where
   `<num>` is the round number (r1, r2, r3, ...). MUST check existing files in
   `.ai.dump/<topic>/` to continue numbering.
-- When writing round 2+, MUST cross-reference the previous round with a
-  relative link at the top (e.g., `Previous round: [review-r1.md](./review-r1.md)`).
-  MUST NOT copy findings from previous rounds — only reference them. Each
-  round's file covers only new or unresolved findings.
+- When writing round 2+, MUST cross-reference the previous round with a relative
+  link at the top (e.g., `Previous round: [review-r1.md](./review-r1.md)`). MUST
+  NOT copy findings from previous rounds — only reference them. Each round's
+  file covers only new or unresolved findings.
 - In conversation, MUST give only a brief summary (critical count, top issue)
   and state the relative `filepath:line` so the user can quickly jump to it.
 

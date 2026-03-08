@@ -27,9 +27,21 @@ Verification, CLI) always apply.
   3. If no conversation context or no match, scan all `.ai.dump/*/` for the
      basename. One match → use it. Multiple → ask the user to pick. None →
      report not found.
-- MUST save detailed research findings, comparisons, and long-form explanations
-  to `.ai.dump/<topic>/research.md` (or a more specific name), even in
-  conversational sessions.
+- Multiple agents may work on the same topic across sessions (one for research,
+  another for planning, another for coding, another for review). All MUST use
+  the same `<topic>/` folder. MUST check existing `.ai.dump/<topic>/` contents
+  before creating new files.
+- Standard artifact names within `.ai.dump/<topic>/`:
+
+  | Artifact          | Filename            | Notes                                                                                            |
+  | ----------------- | ------------------- | ------------------------------------------------------------------------------------------------ |
+  | Research          | `research.md`       | Or a more specific name                                                                          |
+  | Q&A               | `q<num>.md`         | q1, q2, q3, ...                                                                                  |
+  | Plan              | `plan.md`           | Use instead of default location                                                                  |
+  | Code review       | `review-r<num>.md`  | r1, r2, r3 per round                                                                             |
+  | Screenshots       | `<step>-<desc>.png` | e.g., `01-login-form.png`                                                                        |
+  | Test/debug output | Descriptive name    | Logs, traces, snapshots, profiles, coverage, benchmarks — any artifact from testing or debugging |
+
 - When creating or updating any artifact file (research, Q&A, code review, etc.)
   MUST add an `## Authors` section at the bottom with list entries. When
   creating a new file, add `- Written by <cli> (<model>) at <YYYY-MM-DD HH:MM>`.
@@ -43,6 +55,7 @@ Verification, CLI) always apply.
   - Written by claude (claude-opus-4-6) at 2026-02-28 14:30
   - Updated by claude (claude-sonnet-4-6) at 2026-03-01 09:15
   ```
+
 - When an artifact contains items needing user decision (questions, review
   findings, design choices), the first agent MUST add a `**Answer:**`
   placeholder for each. Other agents updating the file later MUST NOT write into
@@ -88,16 +101,16 @@ config-only edit.").
 MUST read the relevant workflow file when the situation matches. All paths are
 relative to `~/.agent-rules/shared/workflows/`.
 
-| Situation                                        | File              |
-| ------------------------------------------------ | ----------------- |
-| Writing or editing markdown (docs, READMEs, etc) | `writing.md`      |
-| Design discussion, ambiguous task, Q&A           | `qa.md`           |
-| Code review (PR, file, diff)                     | `code-review.md`  |
-| Browser interaction or visual debugging          | `browser.md`      |
-| Interactive CLI/TUI tool (vim, fzf, less, REPLs) | `tmux-tui.md`     |
-| Running dev servers (especially in worktrees)    | `dev-ports.md`    |
-| Working in a git worktree                        | `worktree.md`     |
-| Multiple agents in the same worktree             | `multi-agent.md`  |
+| Situation                                        | File             |
+| ------------------------------------------------ | ---------------- |
+| Writing or editing markdown (docs, READMEs, etc) | `writing.md`     |
+| Design discussion, ambiguous task, Q&A           | `qa.md`          |
+| Code review (PR, file, diff)                     | `code-review.md` |
+| Browser interaction or visual debugging          | `browser.md`     |
+| Interactive CLI/TUI tool (vim, fzf, less, REPLs) | `tmux-tui.md`    |
+| Running dev servers (especially in worktrees)    | `dev-ports.md`   |
+| Working in a git worktree                        | `worktree.md`    |
+| Multiple agents in the same worktree             | `multi-agent.md` |
 
 ---
 
@@ -209,7 +222,8 @@ guess.
 - `tsconfig.json` or `package.json` present → MUST read
   `~/.agent-rules/shared/langs/typescript.md`
 - JSX/TSX files present → MUST also read `~/.agent-rules/shared/langs/react.md`
-- `.csproj` or `.sln` present → MUST read `~/.agent-rules/shared/langs/csharp.md`
+- `.csproj` or `.sln` present → MUST read
+  `~/.agent-rules/shared/langs/csharp.md`
 
 ## Local Overrides
 
@@ -246,10 +260,11 @@ SHOULD be gitignored by the developer.
 
 ## Git Safety
 
-- MUST NOT use `git add -A` or `git add .`. Before staging, run `git diff <file>`
-  to verify only your changes are present. If the diff shows unexpected changes
-  you did not make in this session, stop and ask the user before staging. MAY
-  use `git apply --cached <patch>` to stage specific hunks when needed.
+- MUST NOT use `git add -A` or `git add .`. Before staging, run
+  `git diff <file>` to verify only your changes are present. If the diff shows
+  unexpected changes you did not make in this session, stop and ask the user
+  before staging. MAY use `git apply --cached <patch>` to stage specific hunks
+  when needed.
 - MUST NOT commit unless the user explicitly requests it. A prior commit request
   does not authorize future auto-commits in subsequent tasks.
 - MUST confirm with the user before any history-rewriting operation (amend,

@@ -41,8 +41,8 @@ MUST NOT use this for ordinary CLI commands that accept arguments and exit
 - SHOULD wait for expected text in the captured pane before proceeding rather
   than using fixed sleep durations. Poll with short intervals (0.2–0.5s) and a
   timeout.
-- SHOULD capture the pane with `-e` flag when ANSI styling is needed for
-  parsing (e.g., detecting highlighted selections in `fzf`).
+- SHOULD capture the pane with `-e` flag when ANSI styling is needed for parsing
+  (e.g., detecting highlighted selections in `fzf`).
 - MUST NOT leave sessions running after the task is complete.
 - When multiple agents work in the same worktree, each agent MUST use a distinct
   session name (include PID or agent ID).

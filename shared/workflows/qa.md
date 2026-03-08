@@ -42,8 +42,9 @@ MUST infer the topic from the current conversation and open the latest
   from the Q file.
 - Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
   (see [Artifacts in general.md][artifacts]).
-- SHOULD provide detailed analysis with reference links and concrete suggestions.
-  MUST NOT waste tokens on praise, compliments, or discussing what works well.
+- SHOULD provide detailed analysis with reference links and concrete
+  suggestions. MUST NOT waste tokens on praise, compliments, or discussing what
+  works well.
 - SHOULD update project docs (e.g., `docs/`) with resolved decisions; mark open
   items with links back to the Q file.
 
