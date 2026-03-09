@@ -43,19 +43,18 @@ Verification, CLI) always apply.
   | Test/debug output | Descriptive name    | Logs, traces, snapshots, profiles, coverage, benchmarks — any artifact from testing or debugging |
 
 - When creating or updating any artifact file (research, Q&A, code review, etc.)
-  MUST add an `## Authors` section at the bottom with list entries. When
-  creating a new file, add
-  `- Written by <cli> (<model>) [<session-id>] at <YYYY-MM-DD HH:MM>`. When
-  updating an existing file, append
-  `- Updated by <cli> (<model>) [<session-id>] at <YYYY-MM-DD HH:MM>` on a new
-  list item. Use local time. List syntax prevents prettier from joining lines.
-  The session ID lets the user resume a session after a machine restart.
+  MUST add an `## Authors` section at the bottom. Each entry is a list item with
+  a two-line indented continuation. Use local time. How to obtain the session ID
+  is CLI-specific — check the project or global `CLAUDE.md` / equivalent for
+  instructions. If unavailable, write `unknown`.
 
   ```
   ## Authors
 
-  - Written by claude (claude-opus-4-6) [0ff60dda-05a9-4043-89cb-95dcfed4671b] at 2026-02-28 14:30
-  - Updated by codex (o3) [163ee6be-2cc7-47f7-8294-09c7397249bb] at 2026-03-01 09:15
+  - 2026-02-28 14:30: claude (claude-opus-4-6) [0ff60dda-05a9-4043-89cb-95dcfed4671b]
+    Initial research on auth flow trade-offs
+  - 2026-03-01 09:15: codex (o3) [163ee6be-2cc7-47f7-8294-09c7397249bb]
+    Added OAuth2 PKCE comparison section
   ```
 
 - When an artifact contains items needing user decision (questions, review
