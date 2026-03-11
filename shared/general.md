@@ -44,16 +44,18 @@ Verification, CLI) always apply.
 
 - When creating or updating any artifact file (research, Q&A, code review, etc.)
   MUST add an `## Authors` section at the bottom. Each entry is a list item with
-  a two-line indented continuation. Use local time. How to obtain the session ID
-  is CLI-specific — check the project or global `CLAUDE.md` / equivalent for
-  instructions. If unavailable, write `unknown`.
+  a two-line indented continuation. Format: `<cli> (<model>)` where `<cli>` is
+  the CLI tool (claude, copilot, cursor, aider, etc.) and `<model>` is the
+  specific model it used (a CLI may use any model). Use local time. How to
+  obtain the session ID is CLI-specific — check the project or global
+  `CLAUDE.md` / equivalent for instructions. If unavailable, write `unknown`.
 
   ```
   ## Authors
 
   - 2026-02-28 14:30: claude (claude-opus-4-6) [0ff60dda-05a9-4043-89cb-95dcfed4671b]
     Initial research on auth flow trade-offs
-  - 2026-03-01 09:15: codex (o3) [163ee6be-2cc7-47f7-8294-09c7397249bb]
+  - 2026-03-01 09:15: copilot (o3) [163ee6be-2cc7-47f7-8294-09c7397249bb]
     Added OAuth2 PKCE comparison section
   ```
 
@@ -112,6 +114,13 @@ relative to `~/.agent-rules/shared/workflows/`.
 | Running dev servers (especially in worktrees)    | `dev-ports.md`   |
 | Working in a git worktree                        | `worktree.md`    |
 | Multiple agents in the same worktree             | `multi-agent.md` |
+
+MUST read the relevant topic file when the task matches. All paths are relative
+to `~/.agent-rules/shared/`.
+
+| Task involves                                     | File               |
+| ------------------------------------------------- | ------------------ |
+| Type/struct design, domain modeling, state models | `data-modeling.md` |
 
 ---
 
@@ -225,6 +234,8 @@ guess.
 - JSX/TSX files present → MUST also read `~/.agent-rules/shared/langs/react.md`
 - `.csproj` or `.sln` present → MUST read
   `~/.agent-rules/shared/langs/csharp.md`
+- SQL migrations or schema files present → MUST read
+  `~/.agent-rules/shared/langs/sql.md`
 
 ## Local Overrides
 

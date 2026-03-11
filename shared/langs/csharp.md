@@ -44,7 +44,10 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
 - MUST use correct XML doc tags (`<summary>`, `<param>`, `<returns>`). MUST NOT
   leave misleading or outdated comments.
+- See [`data-modeling.md`][dm] for type design rules (abstract record
+  hierarchies, newtype pattern, value objects).
 
+[dm]: ../data-modeling.md
 [VSTHRD002]: https://microsoft.github.io/vs-threading/analyzers/VSTHRD002.html
 [VSTHRD200]: https://microsoft.github.io/vs-threading/analyzers/VSTHRD200.html
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
