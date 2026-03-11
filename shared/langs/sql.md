@@ -25,8 +25,8 @@ materialized view, or event). Premature denormalization trades a future query
 problem for a definite consistency problem.
 
 ```
-Bad:  orders(id, user_id, user_email, ...)   — stale when email changes
-Good: orders(id, user_id, ...)               — JOIN users to get email
+Bad:  orders(id, user_id, user_email, ...)   -- stale when email changes
+Good: orders(id, user_id, ...)               -- JOIN users to get email
 ```
 
 See [normalization vs denormalization trade-offs][celerdata-norm].
@@ -70,6 +70,44 @@ status TEXT NOT NULL CHECK (status IN ('pending', 'shipped'))
 
 See [native enums or CHECK constraints][close-enums] (Close.com).
 
+## Closed vs Open Value Sets
+
+Not all text discriminator columns deserve a CHECK. Distinguish between:
+
+- **Closed sets (CHECK):** values the DB or a worker acts on. State machines,
+  status columns, role columns. Adding a value changes system behavior. DDL is
+  justified.
+- **Open sets (no CHECK):** values the app interprets as routing keys.
+  Notification channels, platform identifiers, provider names, plugin types.
+  Adding a value means a new adapter or config, not new DB behavior. MUST NOT
+  use CHECK constraints on open sets. SHOULD validate open-set values against a
+  registry (config file, enum in code, or lookup table) at the application
+  boundary.
+
+MUST NOT require DDL to extend an existing feature. If a new value in a column
+means "write a new adapter + config" (not "change DB/worker behavior"), the
+column is an open set.
+
+When an open set has per-value metadata with varying shapes (e.g., each push
+platform needs different credentials), MUST use a single JSONB column for the
+variable part instead of adding nullable columns per value. The DB never queries
+inside it. Each adapter reads the blob as a whole.
+
+```sql
+-- Bad: closed CHECK on an open set (every new channel needs DDL)
+channel TEXT NOT NULL CHECK (channel IN ('sms', 'push', 'email'))
+
+-- Bad: nullable columns per variant (multicolumn-attributes anti-pattern)
+p256dh_key TEXT,  -- web push only
+auth_key   TEXT,  -- web push only
+oauth_token TEXT, -- zalo only
+
+-- Good: open set + JSONB for per-variant metadata
+channel  TEXT NOT NULL,          -- sms, push, email, zalo, ...
+platform TEXT NOT NULL,          -- ios, android, web, ...
+metadata JSONB,                  -- platform-specific credentials/config
+```
+
 ## Status Column over Boolean Flags
 
 MUST use a single status column (text + CHECK) for mutually exclusive states.
@@ -93,7 +131,7 @@ application validation is the second.
 
 ```sql
 -- Bad
-price NUMERIC                                       — app-only validation
+price NUMERIC                                       -- app-only validation
 
 -- Good
 price NUMERIC NOT NULL CONSTRAINT price_positive CHECK (price > 0)
@@ -131,7 +169,7 @@ products(id, name, weight NUMERIC) + books(product_id FK, isbn, page_count)
 
 ## No Polymorphic Associations
 
-MUST NOT use a `(target_id, target_type)` FK pattern — the database cannot
+MUST NOT use a `(target_id, target_type)` FK pattern. The database cannot
 enforce referential integrity. Use exclusive arc (multiple nullable FKs with a
 CHECK ensuring exactly one is non-null), a shared parent table, or separate
 association tables.
@@ -153,7 +191,7 @@ MUST NOT create numbered columns for repeated data (`phone1`, `phone2`,
 ## NUMERIC for Money, Not FLOAT
 
 MUST use `NUMERIC(p, s)` or integer minor units for monetary values. MUST NOT
-use `FLOAT` or `DOUBLE` — IEEE 754 binary floating-point accumulates rounding
+use `FLOAT` or `DOUBLE`. IEEE 754 binary floating-point accumulates rounding
 errors invisible in small test data.
 
 ```sql
@@ -184,14 +222,15 @@ SHOULD choose the tree model that fits the read/write pattern instead of
 defaulting to adjacency list (`parent_id`). Options: [closure table][closure]
 (most versatile), materialized path (read-heavy), nested sets (rarely modified),
 recursive CTEs (shallow trees). Adjacency list + recursive CTEs is fine for most
-cases — the rule is about knowing the trade-offs.
+cases. The rule is about knowing the trade-offs.
 
 ## JSONB: Structured Data Belongs in Columns
 
 MUST NOT store queryable, structured data in JSONB to avoid schema design. JSONB
-is for genuinely schemaless or opaque data. If you query a JSON field regularly,
-it should be a column. If JSON arrays are joined against, they should be a
-table.
+is for genuinely schemaless or opaque data. For opaque per-variant metadata in
+open sets, see [Closed vs Open Value Sets](#closed-vs-open-value-sets). If you
+query a JSON field regularly, it should be a column. If JSON arrays are joined
+against, they should be a table.
 
 ```sql
 -- Bad
@@ -215,8 +254,24 @@ See [Postgres triggers best practices][opensourcedb-triggers].
 
 CHECKs enforce _structural_ integrity: valid value sets, column relationships
 that define what the data _means_. State machine transitions, workflow rules,
-conditional validation belong in application code. The schema should be stable
-against business logic evolution.
+conditional validation belong in application code.
+
+## DDL Stability
+
+The schema MUST be stable against feature evolution. Extending an existing
+feature's _value space_ (new adapter, new variant, new integration) MUST NOT
+require a migration. DDL changes are reserved for genuinely new data domains: new tables,
+new structural columns, new relationships.
+
+Test: "If a product manager asks to support a new X, do I need a migration?"
+
+- **New notification channel** (Zalo, Telegram) → no. New adapter + config.
+- **New push platform** (Huawei HMS) → no. New adapter + token metadata.
+- **New payment provider** (Stripe → PayPal) → no. New adapter + credentials.
+- **Rider profiles with saved addresses** → yes. New table, new data domain.
+- **Notification preferences per user** → yes. New table, new relationship.
+
+See [Closed vs Open Value Sets](#closed-vs-open-value-sets) above.
 
 ## Soft Delete: Know the Trade-offs
 
@@ -312,12 +367,12 @@ tool renders fenced diagram blocks.
 [karwin-vol2]: https://pragprog.com/titles/bksap2/more-sql-antipatterns/
 [celerdata-norm]:
   https://celerdata.com/glossary/normalization-vs-denormalization-the-trade-offs-you-need-to-know
-[god-table]: https://softwarepatternslexicon.com/patterns-sql/16/2/1/
+[god-table]: https://wiki.c2.com/?GodTable
 [close-enums]:
   https://making.close.com/posts/native-enums-or-check-constraints-in-postgresql/
 [pg-constraints]: https://www.postgresql.org/docs/current/ddl-constraints.html
 [closure]:
-  https://en.wikipedia.org/wiki/Closure_table
+  https://www.red-gate.com/simple-talk/databases/sql-server/t-sql-programming-sql-server/sql-server-closure-tables/
 [opensourcedb-triggers]:
   https://opensource-db.com/postgres-triggers-best-practices-pgsql-phriday-007/
 [brandur-soft-delete]: https://brandur.org/soft-deletion
