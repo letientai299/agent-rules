@@ -16,47 +16,21 @@ install_claude() {
   backup_and_link "$REPO_ROOT/claude/hooks"           "$TARGET_HOME/.claude/hooks"         "claude"
   backup_and_link "$REPO_ROOT/claude/settings.json"   "$TARGET_HOME/.claude/settings.json" "claude"
 
-  # Handle ~/.claude/rules as a real directory with per-file symlinks
-  local rules_dir="$TARGET_HOME/.claude/rules"
-
-  if [[ -L "$rules_dir" ]]; then
-    # Old install used a directory symlink — back up and remove
-    if [[ "$DRY_RUN" == true ]]; then
-      info "[dry-run] Would remove old rules symlink $rules_dir"
-    else
-      mkdir -p "$BACKUP_DIR"
-      cp -RL "$rules_dir" "$BACKUP_DIR/claude-rules" 2>/dev/null || true
-      warn "Backed up old rules symlink $rules_dir"
-      rm -f "$rules_dir"
+  # Rules: individual symlinks so adding a workflow file is enough.
+  # Remove old rules symlink from previous installs before mkdir.
+  if [[ -L "$TARGET_HOME/.claude/rules" ]]; then
+    if [[ "$DRY_RUN" != true ]]; then
+      rm "$TARGET_HOME/.claude/rules"
     fi
   fi
-
-  if [[ "$DRY_RUN" == true ]]; then
-    info "[dry-run] Would create $rules_dir/"
-  else
-    mkdir -p "$rules_dir"
+  if [[ "$DRY_RUN" != true ]]; then
+    mkdir -p "$TARGET_HOME/.claude/rules"
   fi
-
-  # Remove stale symlinks (e.g., deleted shared files)
-  if [[ "$DRY_RUN" == true ]]; then
-    info "[dry-run] Would clean stale symlinks in $rules_dir/"
-  else
-    find "$rules_dir" -maxdepth 1 -type l ! -exec test -e {} \; -delete 2>/dev/null || true
-  fi
-
-  # Symlink shared/general.md
-  backup_and_link "$REPO_ROOT/shared/general.md" "$rules_dir/general.md" "claude/rules"
-
-  # Symlink each shared/workflows/*.md
-  for f in "$REPO_ROOT"/shared/workflows/*.md; do
-    local name
-    name="$(basename "$f")"
-    backup_and_link "$f" "$rules_dir/$name" "claude/rules"
-  done
-
-  # Symlink machine-local overrides if present
+  backup_and_link "$REPO_ROOT/shared/general.md"  "$TARGET_HOME/.claude/rules/general.md"  "claude/rules"
+  backup_and_link "$REPO_ROOT/shared/workflows"   "$TARGET_HOME/.claude/rules/workflows"   "claude/rules"
+  # local/agents.md is not git-tracked; only link when present.
   if [[ -f "$REPO_ROOT/local/agents.md" ]]; then
-    backup_and_link "$REPO_ROOT/local/agents.md" "$rules_dir/local.md" "claude/rules"
+    backup_and_link "$REPO_ROOT/local/agents.md"  "$TARGET_HOME/.claude/rules/local.md"  "claude/rules"
   fi
 
   # Verify all symlinks resolve
@@ -69,18 +43,19 @@ install_claude() {
   fi
 
   local failed=0
-  local link
-  while IFS= read -r -d '' link; do
-    if [[ -L "$link" ]] && [[ -e "$link" ]]; then
-      log "OK: $link"
-    else
-      err "BROKEN: $link"
-      failed=1
-    fi
-  done < <(find "$rules_dir" -name '*.md' -print0 2>/dev/null)
+  local links=(
+    "$TARGET_HOME/.claude/CLAUDE.md"
+    "$TARGET_HOME/.claude/hooks"
+    "$TARGET_HOME/.claude/settings.json"
+    "$TARGET_HOME/.claude/rules/general.md"
+    "$TARGET_HOME/.claude/rules/workflows"
+  )
+  # Only verify local.md if it was linked
+  if [[ -L "$TARGET_HOME/.claude/rules/local.md" ]]; then
+    links+=("$TARGET_HOME/.claude/rules/local.md")
+  fi
 
-  for link in "$TARGET_HOME/.claude/CLAUDE.md" \
-              "$TARGET_HOME/.claude/hooks" "$TARGET_HOME/.claude/settings.json"; do
+  for link in "${links[@]}"; do
     if [[ -L "$link" ]] && [[ -e "$link" ]]; then
       log "OK: $link"
     else

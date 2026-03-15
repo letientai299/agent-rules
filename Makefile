@@ -1,8 +1,8 @@
-.PHONY: all claude codex copilot shared
+.PHONY: all claude codex copilot opencode shared
 
 .DEFAULT_GOAL := claude
 
-all: claude codex copilot
+all: claude codex copilot opencode
 
 shared:
 	./scripts/install-shared.sh
@@ -15,3 +15,6 @@ codex: shared
 
 copilot: shared
 	./scripts/install-copilot.sh
+
+opencode: shared
+	./scripts/install-opencode.sh

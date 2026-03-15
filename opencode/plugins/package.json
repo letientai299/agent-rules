@@ -1,0 +1,17 @@
+{
+  "name": "agent-rules-opencode-plugins",
+  "version": "1.0.0",
+  "description": "OpenCode plugins for agent rules enforcement",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -113,13 +113,7 @@ relative to `~/.agent-rules/shared/workflows/`.
 | Interactive CLI/TUI tool (vim, fzf, less, REPLs) | `tmux-tui.md`    |
 | Running dev servers (especially in worktrees)    | `dev-ports.md`   |
 | Working in a git worktree                        | `worktree.md`    |
-| Multiple agents in the same worktree             | `multi-agent.md` |
-
-MUST read the relevant topic file when the task matches. All paths are relative
-to `~/.agent-rules/shared/`.
-
-| Task involves                                     | File               |
-| ------------------------------------------------- | ------------------ |
+| Multiple agents in the same worktree             | `multi-agent.md`   |
 | Type/struct design, domain modeling, state models | `data-modeling.md` |
 
 ---

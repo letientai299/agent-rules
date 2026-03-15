@@ -93,5 +93,5 @@ tool renders fenced diagram blocks.
 [fowler-vo]: https://martinfowler.com/bliki/ValueObject.html
 [mermaid]: https://mermaid.js.org/
 [d2]: https://d2lang.com/
-[sql]: ./langs/sql.md
+[sql]: ../langs/sql.md
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
