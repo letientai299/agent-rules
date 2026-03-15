@@ -1,3 +1,4 @@
 .ai.dump/
 local/*
 !local/.gitkeep
+opencode/plugins/dist
