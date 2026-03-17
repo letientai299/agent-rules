@@ -1,34 +1,18 @@
 #!/bin/bash
 # PostToolUse hook: format markdown files after Write/Edit operations.
+# Claude Code passes JSON on stdin, not as positional arguments.
+# Uses --ignore-path='' because prettier v3+ skips gitignored files by default.
 
 set -euo pipefail
 
-TOOL="$1"
-RESULT="$2"
+input=$(cat)
 
-# Only run on Write or Edit tools
-if [[ "$TOOL" != "Write" && "$TOOL" != "Edit" ]]; then
-	exit 0
-fi
+file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
 
-# Check if result indicates success
-if [[ "$RESULT" != *"success"* ]]; then
-	exit 0
-fi
-
-# Extract file path from result - looks for patterns like:
-# "Wrote: /path/to/file.md" or "/path/to/file.md"
-FILE_PATH=$(echo "$RESULT" | grep -oE '/[^ ]+\.md' | head -1 || true)
-
-if [[ -z "$FILE_PATH" ]]; then
-	exit 0
-fi
-
-# Only format files in .ai.dump or markdown files generally
-if [[ "$FILE_PATH" == *.md ]] && [[ -f "$FILE_PATH" ]]; then
-	# Check if prettier is available
+# Only format markdown files that exist
+if [[ "$file_path" == *.md ]] && [[ -f "$file_path" ]]; then
 	if command -v prettier &>/dev/null; then
-		prettier --write "$FILE_PATH" 2>/dev/null || true
+		prettier --write --ignore-path='' "$file_path" 2>/dev/null || true
 	fi
 fi
 
