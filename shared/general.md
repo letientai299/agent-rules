@@ -13,10 +13,13 @@ Verification, CLI) always apply.
 
 ## Artifacts
 
-- All generated artifacts MUST go under `.ai.dump/<topic>/` at the workspace
-  root, where `<topic>` is a short kebab-case slug derived from the task (e.g.,
-  `auth-flow`, `palette-ux`). MUST NOT place them in the repo root, `tmp/`, or
-  directly in `.ai.dump/`. `.ai.dump/` is gitignored and disposable.
+- All generated artifacts MUST go under `.ai.dump/<topic>/` in the **current
+  working directory** where the CLI agent session started (i.e., the directory
+  the user launched the agent from), NOT the git root or worktree root. The user
+  expects artifacts next to where they work. `<topic>` is a short kebab-case
+  slug derived from the task (e.g., `auth-flow`, `palette-ux`). MUST NOT place
+  them in the repo root, `tmp/`, or directly in `.ai.dump/`. `.ai.dump/` is
+  gitignored and disposable.
 - MUST check existing `.ai.dump/` subdirectories to avoid collisions and reuse
   an existing `<topic>/` folder when the work is related.
 - **Artifact lookup:** when the user references an artifact by partial name
@@ -104,16 +107,16 @@ config-only edit.").
 MUST read the relevant workflow file when the situation matches. All paths are
 relative to `~/.agent-rules/shared/workflows/`.
 
-| Situation                                        | File             |
-| ------------------------------------------------ | ---------------- |
-| Writing or editing markdown (docs, READMEs, etc) | `writing.md`     |
-| Design discussion, ambiguous task, Q&A           | `qa.md`          |
-| Code review (PR, file, diff)                     | `code-review.md` |
-| Browser interaction or visual debugging          | `browser.md`     |
-| Interactive CLI/TUI tool (vim, fzf, less, REPLs) | `tmux-tui.md`    |
-| Running dev servers (especially in worktrees)    | `dev-ports.md`   |
-| Working in a git worktree                        | `worktree.md`    |
-| Multiple agents in the same worktree             | `multi-agent.md`   |
+| Situation                                         | File               |
+| ------------------------------------------------- | ------------------ |
+| Writing or editing markdown (docs, READMEs, etc)  | `writing.md`       |
+| Design discussion, ambiguous task, Q&A            | `qa.md`            |
+| Code review (PR, file, diff)                      | `code-review.md`   |
+| Browser interaction or visual debugging           | `browser.md`       |
+| Interactive CLI/TUI tool (vim, fzf, less, REPLs)  | `tmux-tui.md`      |
+| Running dev servers (especially in worktrees)     | `dev-ports.md`     |
+| Working in a git worktree                         | `worktree.md`      |
+| Multiple agents in the same worktree              | `multi-agent.md`   |
 | Type/struct design, domain modeling, state models | `data-modeling.md` |
 
 ---
