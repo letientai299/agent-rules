@@ -47,6 +47,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/check-research.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/gen-topic.py"
           }
         ]
       }
