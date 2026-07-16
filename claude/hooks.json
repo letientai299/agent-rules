@@ -31,16 +31,6 @@
         ]
       }
     ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/save-session-id.sh"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [

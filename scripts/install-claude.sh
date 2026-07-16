@@ -37,8 +37,11 @@ install_claude() {
       fi
       local tmpfile
       tmpfile="$(mktemp)"
-      # hooks.json keys win; everything else in settings.json is preserved.
-      jq -s '.[0] * .[1]' "$settings" "$hooks_src" > "$tmpfile"
+      # Shallow merge: hooks.json's top-level keys (hooks, statusLine) replace
+      # settings.json's wholesale, so hooks removed from hooks.json are pruned.
+      # A deep merge (`*`) would leave stale sub-hooks behind. Other settings.json
+      # keys not present in hooks.json are preserved.
+      jq -s '.[0] + .[1]' "$settings" "$hooks_src" > "$tmpfile"
       mv "$tmpfile" "$settings"
       log "claude: merged hooks into $settings"
     fi

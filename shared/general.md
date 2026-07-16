@@ -49,16 +49,14 @@ Verification, CLI) always apply.
   MUST add an `## Authors` section at the bottom. Each entry is a list item with
   a two-line indented continuation. Format: `<cli> (<model>)` where `<cli>` is
   the CLI tool (claude, copilot, cursor, aider, etc.) and `<model>` is the
-  specific model it used (a CLI may use any model). Use local time. How to
-  obtain the session ID is CLI-specific — check the project or global
-  `CLAUDE.md` / equivalent for instructions. If unavailable, write `unknown`.
+  specific model it used (a CLI may use any model). Use local time.
 
   ```
   ## Authors
 
-  - 2026-02-28 14:30: claude (claude-opus-4-6) [0ff60dda-05a9-4043-89cb-95dcfed4671b]
+  - 2026-02-28 14:30: claude (claude-opus-4-6)
     Initial research on auth flow trade-offs
-  - 2026-03-01 09:15: copilot (o3) [163ee6be-2cc7-47f7-8294-09c7397249bb]
+  - 2026-03-01 09:15: copilot (o3)
     Added OAuth2 PKCE comparison section
   ```
 
