@@ -9,15 +9,6 @@
             "command": "~/.claude/hooks/format-md.sh"
           }
         ]
-      },
-      {
-        "matcher": "WebSearch|WebFetch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/mark-research.sh"
-          }
-        ]
       }
     ],
     "PreToolUse": [
@@ -34,10 +25,6 @@
     "Stop": [
       {
         "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/check-research.sh"
-          },
           {
             "type": "command",
             "command": "~/.claude/hooks/gen-topic.py"

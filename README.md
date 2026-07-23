@@ -107,10 +107,9 @@ undesired code quality.
 quality standard, validated claims, ...
 
 Claude Code [hooks][hooks] enforce critical rules at runtime: `safe-git.sh`
-blocks `git add -A` before it reaches the repo, and `check-research.sh` requires
-the agent to verify technical claims against official docs before finishing. The
-rest is prompt-level rules with [RFC 2119][rfc2119] severity
-(`MUST`/`SHOULD`/`MAY`) so the agent knows what it can bend and what it can't.
+blocks `git add -A` before it reaches the repo. The rest is prompt-level rules
+with [RFC 2119][rfc2119] severity (`MUST`/`SHOULD`/`MAY`) so the agent knows
+what it can bend and what it can't.
 
 ## Install
 

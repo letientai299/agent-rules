@@ -3,8 +3,8 @@
 ## Hook Responses
 
 When a hook blocks with a message, respond with **one short sentence** — no
-elaboration, no bullet points, no restating the hook's message. Example: "No
-research needed — config-only edit."
+elaboration, no bullet points, no restating the hook's message. Example: "Staged
+only my hunks."
 
 ## Before Starting a Code Task
 

@@ -6,18 +6,6 @@
         "type": "command",
         "bash": "~/.copilot/hooks/safe-git.sh",
         "timeoutSec": 10
-      },
-      {
-        "type": "command",
-        "bash": "~/.copilot/hooks/check-research.sh",
-        "timeoutSec": 10
-      }
-    ],
-    "postToolUse": [
-      {
-        "type": "command",
-        "bash": "~/.copilot/hooks/mark-research.sh",
-        "timeoutSec": 10
       }
     ]
   }
