@@ -15,17 +15,60 @@ Research Verification, CLI) always apply.
 
 Applies to chat replies, code, comments, docs, and commit messages.
 
+### Everywhere
+
+- MUST state facts. MUST NOT narrate, editorialize, or hedge.
+- MUST use active voice and the most common word among alternatives.
 - MUST keep comment blocks ≤ 7 words, function names ≤ 4 words, and user-facing
   message strings ≤ 10 words.
-- MUST use active voice.
-- MUST pick the most common word among alternatives.
-- MUST be concise and machinery. MUST NOT be verbose or chatty.
-- MUST NOT narrate the work as a performance — no preamble, no tally of what was
-  done, no self-congratulation.
-  - Instead of `Two calls I made without asking, both following your notes:`,
-    write `Extra note:`.
-  - Instead of `Three things worth fixing before you send it`, write
-    `Additional issues`.
+- MUST NOT open with a preamble ("Let me...", "I'll now...", "Great question").
+- MUST NOT close with a summary of work already visible in the diff, tool
+  output, or artifact.
+- MUST NOT praise, apologize, or self-assess ("perfect", "you're right",
+  "sorry", "this is much cleaner now").
+- MUST NOT use filler intensifiers: "comprehensive", "robust", "seamless",
+  "powerful", "simply", "just", "very", "really", "actually".
+- MUST NOT use contrast fillers: "X, not just Y", "it's not about X, it's about
+  Y".
+- MUST NOT restate the user's request back to them.
+
+### Chat Replies
+
+- MUST answer in the fewest lines that carry the facts. One sentence beats a
+  paragraph; a `file:line` beats a sentence.
+- MUST NOT list steps taken, files touched, or tools run when the transcript
+  already shows them. Report only what the user cannot see: results, surprises,
+  blockers, decisions.
+- MUST NOT add "Next steps", "Summary", or "What changed" sections unless the
+  user asks.
+- MUST NOT emit progress chatter between tool calls.
+- When a hook or command blocks, MUST reply with one short sentence.
+- When work is done and verified, MUST say so plainly in one line. When it
+  failed, MUST say so and quote the error.
+
+### Code
+
+- MUST let names and structure carry the meaning; comments cover only _why_.
+- MUST NOT write comments that restate the next line, mark obvious sections
+  (`// loop over items`), or announce edits (`// added`, `// changed`,
+  `// new`).
+- MUST NOT leave commented-out code or TODOs without an owner or issue link.
+- MUST NOT add docstrings to self-evident functions.
+- Log and error strings MUST name the condition and the subject, nothing else.
+
+### Docs
+
+- MUST lead with the fact, then the detail. No throat-clearing intro paragraphs,
+  no "In this section we will...".
+- MUST NOT include marketing tone, feature adjectives, or motivational framing.
+- MUST NOT write a conclusion or recap section.
+- See `workflows/writing.md` for markdown formatting rules.
+
+### Commit Messages
+
+- Subject states _why_ in ≤ 50 chars. Body wrapped at 80 chars, only when the
+  why is non-obvious.
+- MUST NOT bullet-list every changed file.
 
 ## Artifacts
 
@@ -300,7 +343,6 @@ SHOULD be gitignored by the developer.
 ## Commits
 
 - MUST use conventional commit messages without scope (e.g., `fix:`, not
-  `fix(ext):`). State _why_, not _what_. Subject ≤50 chars. Body wrapped at 80
-  chars.
+  `fix(ext):`). See [Output Style](#output-style) for subject and body rules.
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt

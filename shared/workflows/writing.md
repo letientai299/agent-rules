@@ -2,6 +2,9 @@
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
+Tone and word choice follow [Output Style][output-style]. Rules below cover
+markdown structure.
+
 - MUST use **reference-style links** in Markdown, not inline. Keeps lines short.
   - Yes: `See [WhichKey][wk]` with `[wk]: https://...` at the bottom.
   - No: `See [WhichKey](https://github.com/folke/which-key.nvim)` inline.
@@ -20,9 +23,11 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 - MUST NOT surround file paths in output with punctuation like `.` or `,` —
   write `path/to/file` not `path/to/file.` so double-click selects the full path
   for terminal use.
-- MUST NOT use contrast fillers: "X, not just Y", "X, not merely Y", "X, not
-  only Y". State what X does. If Y matters, give it its own sentence.
 - SHOULD prefer short declarative sentences. Fragments are fine for list items.
+- MUST start a section with its point. MUST NOT write intro paragraphs that
+  announce what follows, or recap sections that repeat what came before.
+- MUST NOT address the reader's feelings or motivation ("Don't worry", "This is
+  the fun part", "As you can see").
 - MUST link concepts (tools, terms, techniques) on first mention in the document
   when the concept wasn't already linked in a referenced doc above. "First
   mention" means first when reading top to bottom. Use reference-style links per
@@ -31,4 +36,5 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
   and other tokens that belong to a code/shell context. Signals where those
   words are actionable vs. prose.
 
+[output-style]: ../general.md#output-style
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
