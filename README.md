@@ -106,10 +106,12 @@ undesired code quality.
 **My solution**: [comprehensive rules](./shared), covering git operations, code
 quality standard, validated claims, ...
 
-Claude Code [hooks][hooks] enforce critical rules at runtime: `safe-git.sh`
-blocks `git add -A` before it reaches the repo. The rest is prompt-level rules
-with [RFC 2119][rfc2119] severity (`MUST`/`SHOULD`/`MAY`) so the agent knows
-what it can bend and what it can't.
+Claude, Codex, and Cursor share `shared/hooks`: `safe-git.sh` blocks
+`git add -A` / `git add .`, and `format-md.sh` formats `*.md` after edits.
+OpenCode has equivalent plugins. Codex loads `~/.codex/hooks.json` and skips
+new hooks until you trust them in `/hooks`. The rest is prompt-level rules with
+[RFC 2119][rfc2119] severity (`MUST`/`SHOULD`/`MAY`) so the agent knows what it
+can bend and what it can't.
 
 ## Install
 
@@ -127,12 +129,10 @@ Run `make codex`, `make copilot`, `make cursor`, or `make all`.
 the `agent` / `cursor-agent` CLI both read `~/.cursor/rules` and
 `~/.cursor/hooks.json`.
 
-Codex and Copilot don't have the same level of support for runtime enforcements
-(via shell script hooks), auto-discovering `rules/`, and following symlinks like
-Claude does, so their compliance isn't as good. Cursor gets `.mdc` user rules
-plus `beforeShellExecution` / `afterFileEdit` hooks, closer to Claude than to
-Codex. I mostly use Claude and add support for other agents to get a similar UX
-when I need them.
+Copilot only has `safe-git` (no `format-md`). Codex and Copilot don't
+auto-discover a `rules/` directory or follow instruction-file symlinks like
+Claude does, so routing still goes through a generated `AGENTS.md`. I mostly use
+Claude and add support for other agents to get a similar UX when I need them.
 
 ## Rules
 

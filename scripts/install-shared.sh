@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Shared installer — sets up ~/.agent-rules symlink and global gitignore.
-# Exports force_link() for agent-specific installers to source.
+# Exports force_link() and link_shared_hooks() for agent-specific installers.
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -50,6 +50,24 @@ force_link() {
   rm -rf "$target"
   ln -sfn "$source" "$target"
   log "$label: $target → $source"
+}
+
+link_shared_hooks() {
+  local dest="$1"
+  local label="$2"
+
+  if [[ -L "$dest" ]]; then
+    if [[ "$DRY_RUN" == true ]]; then
+      info "[dry-run] Would replace symlink $dest with a hooks directory"
+    else
+      rm "$dest"
+    fi
+  fi
+  if [[ "$DRY_RUN" != true ]]; then
+    mkdir -p "$dest"
+  fi
+  force_link "$REPO_ROOT/shared/hooks/safe-git.sh" "$dest/safe-git.sh" "$label"
+  force_link "$REPO_ROOT/shared/hooks/format-md.sh" "$dest/format-md.sh" "$label"
 }
 
 generate_routing_list() {

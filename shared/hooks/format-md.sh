@@ -1,6 +1,8 @@
 #!/bin/bash
-# PostToolUse hook: format markdown files after Write/Edit operations.
-# Claude Code passes JSON on stdin, not as positional arguments.
+# Format markdown after an edit. Payload shapes:
+# Claude/Codex PostToolUse: .tool_input.file_path or apply_patch in
+# .tool_input.command
+# Cursor afterFileEdit: .file_path
 #
 # Picks the markdown formatter the repo actually uses instead of hardcoding
 # prettier. Walks up from the edited file to the repo root; the closest
@@ -10,50 +12,50 @@
 # passed explicitly. Falls back to prettier when no config is found.
 #
 # If the detected tool's config exists but the tool isn't installed, the hook
-# exits 2 with a reminder — Claude Code surfaces PostToolUse stderr to the
-# agent so it can install the tool or format manually.
+# exits 2 with a reminder.
 
 set -euo pipefail
 
 input=$(cat)
+cwd=$(echo "$input" | jq -r '.cwd // empty')
+missing_tool=""
 
-file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
+resolve_path() {
+	local p="$1"
+	[[ -z "$p" || "$p" == "null" ]] && return
+	if [[ "$p" == /* ]]; then
+		echo "$p"
+	elif [[ -n "$cwd" ]]; then
+		echo "$cwd/$p"
+	else
+		echo "$p"
+	fi
+}
 
-# Only format markdown files that exist.
-[[ "$file_path" == *.md ]] && [[ -f "$file_path" ]] || exit 0
-
-# Detect the formatter by walking up from the file's directory. Echoes the
-# tool name on the first directory that carries a recognized config, else "".
 detect_formatter() {
+	local file_path="$1"
 	local dir
 	dir=$(cd "$(dirname "$file_path")" && pwd)
 
 	local precommit
 	while :; do
 		precommit="$dir/.pre-commit-config.yaml"
-		# rumdl: dedicated markdown linter/formatter. It also discovers
-		# .config/rumdl.toml. .rumdl_cache/ is left behind after a run, so it
-		# marks usage even without a config file.
 		if [[ -f "$dir/.rumdl.toml" || -f "$dir/rumdl.toml" || -f "$dir/.config/rumdl.toml" || -d "$dir/.rumdl_cache" ]] ||
 			{ [[ -f "$dir/pyproject.toml" ]] && grep -q '^\[tool\.rumdl' "$dir/pyproject.toml"; } ||
 			{ [[ -f "$precommit" ]] && grep -q 'rumdl' "$precommit"; }; then
 			echo rumdl
 			return
 		fi
-		# mdformat: python markdown formatter.
 		if [[ -f "$dir/.mdformat.toml" ]] ||
 			{ [[ -f "$dir/pyproject.toml" ]] && grep -q '^\[tool\.mdformat' "$dir/pyproject.toml"; } ||
 			{ [[ -f "$precommit" ]] && grep -q 'mdformat' "$precommit"; }; then
 			echo mdformat
 			return
 		fi
-		# dprint: multi-language formatter. Only these four root names are
-		# auto-discovered — .config/ applies only to the global user config.
 		if [[ -f "$dir/dprint.json" || -f "$dir/dprint.jsonc" || -f "$dir/.dprint.json" || -f "$dir/.dprint.jsonc" ]]; then
 			echo dprint
 			return
 		fi
-		# prettier: config files, a "prettier" key in package.json, or a hook.
 		if compgen -G "$dir/.prettierrc*" >/dev/null 2>&1 ||
 			compgen -G "$dir/prettier.config.*" >/dev/null 2>&1 ||
 			{ [[ -f "$dir/package.json" ]] && grep -q '"prettier"' "$dir/package.json"; } ||
@@ -62,7 +64,6 @@ detect_formatter() {
 			return
 		fi
 
-		# Stop after the repo root; break when we can't go higher.
 		[[ -e "$dir/.git" ]] && break
 		[[ "$dir" == "/" ]] && break
 		dir=$(dirname "$dir")
@@ -72,29 +73,65 @@ detect_formatter() {
 }
 
 run_formatter() {
-	case "$1" in
+	local tool="$1"
+	local file_path="$2"
+	case "$tool" in
 	rumdl) rumdl fmt "$file_path" >/dev/null 2>&1 || true ;;
 	mdformat) mdformat "$file_path" >/dev/null 2>&1 || true ;;
 	dprint) dprint fmt "$file_path" >/dev/null 2>&1 || true ;;
-	# --ignore-path='' because prettier v3+ skips gitignored files by default.
 	prettier) prettier --write --ignore-path='' "$file_path" >/dev/null 2>&1 || true ;;
 	esac
 }
 
-tool=$(detect_formatter)
+format_md() {
+	local file_path="$1"
+	[[ "$file_path" == *.md ]] && [[ -f "$file_path" ]] || return 0
 
-# No repo config found: format with prettier if available, else do nothing.
-if [[ -z "$tool" ]]; then
-	command -v prettier &>/dev/null && run_formatter prettier
-	exit 0
-fi
+	local tool
+	tool=$(detect_formatter "$file_path")
 
-# Detected a tool but it isn't installed — remind Claude instead of silently
-# falling back to the wrong formatter.
-if ! command -v "$tool" &>/dev/null; then
+	if [[ -z "$tool" ]]; then
+		command -v prettier &>/dev/null && run_formatter prettier "$file_path"
+		return 0
+	fi
+
+	if ! command -v "$tool" &>/dev/null; then
+		missing_tool="$tool:$file_path"
+		return 0
+	fi
+
+	run_formatter "$tool" "$file_path"
+}
+
+paths=$(echo "$input" | jq -r '
+	[.file_path // empty, .tool_input.file_path // empty, .tool_input.path // empty]
+	| .[] | select(. != "")
+')
+cmd=$(echo "$input" | jq -r '.tool_input.command // empty')
+patch_paths=$(printf '%s\n' "$cmd" | awk '
+	/^\*\*\* Add File: / { sub(/^\*\*\* Add File: /, ""); print }
+	/^\*\*\* Update File: / { sub(/^\*\*\* Update File: /, ""); print }
+')
+
+seen=""
+while IFS= read -r raw; do
+	[[ -z "$raw" ]] && continue
+	resolved=$(resolve_path "$raw")
+	case " $seen " in
+	*" $resolved "*) continue ;;
+	esac
+	seen="$seen $resolved"
+	format_md "$resolved"
+done <<EOF
+$paths
+$patch_paths
+EOF
+
+if [[ -n "$missing_tool" ]]; then
+	tool=${missing_tool%%:*}
+	file_path=${missing_tool#*:}
 	echo "This repo is configured to format markdown with '$tool', which is not installed. Install it (or format $file_path manually) — do not use a different formatter." >&2
 	exit 2
 fi
 
-run_formatter "$tool"
 exit 0

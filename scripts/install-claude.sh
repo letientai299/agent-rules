@@ -13,7 +13,7 @@ install_claude() {
   mkdir -p "$TARGET_HOME/.claude"
 
   force_link "$REPO_ROOT/claude/CLAUDE.md"      "$TARGET_HOME/.claude/CLAUDE.md"     "claude"
-  force_link "$REPO_ROOT/claude/hooks"           "$TARGET_HOME/.claude/hooks"         "claude"
+  link_shared_hooks "$TARGET_HOME/.claude/hooks" "claude"
 
   # Merge hooks config into existing settings.json (don't overwrite volatile fields).
   local settings="$TARGET_HOME/.claude/settings.json"
@@ -74,7 +74,8 @@ install_claude() {
   local failed=0
   local links=(
     "$TARGET_HOME/.claude/CLAUDE.md"
-    "$TARGET_HOME/.claude/hooks"
+    "$TARGET_HOME/.claude/hooks/safe-git.sh"
+    "$TARGET_HOME/.claude/hooks/format-md.sh"
     "$TARGET_HOME/.claude/rules/general.md"
     "$TARGET_HOME/.claude/rules/workflows"
   )

@@ -15,6 +15,8 @@ install_codex() {
   # Codex uses a single AGENTS.md — no rules directory support
   # Copy instead of symlink so we can inject the generated routing list
   copy_with_routing "$REPO_ROOT/codex/AGENTS.md" "$TARGET_HOME/.codex/AGENTS.md" "codex"
+  link_shared_hooks "$TARGET_HOME/.codex/hooks" "codex"
+  force_link "$REPO_ROOT/codex/hooks.json" "$TARGET_HOME/.codex/hooks.json" "codex"
 
   # Verify
   echo
@@ -25,11 +27,31 @@ install_codex() {
     return
   fi
 
+  local failed=0
   if [[ -e "$TARGET_HOME/.codex/AGENTS.md" ]]; then
     log "OK: $TARGET_HOME/.codex/AGENTS.md"
-    echo -e "${GREEN}All symlinks verified.${NC}"
   else
     err "BROKEN: $TARGET_HOME/.codex/AGENTS.md"
+    failed=1
+  fi
+
+  local link
+  for link in "$TARGET_HOME/.codex/hooks.json" \
+              "$TARGET_HOME/.codex/hooks/safe-git.sh" \
+              "$TARGET_HOME/.codex/hooks/format-md.sh"; do
+    if [[ -L "$link" ]] && [[ -e "$link" ]]; then
+      log "OK: $link"
+    else
+      err "BROKEN: $link"
+      failed=1
+    fi
+  done
+
+  if [[ $failed -eq 0 ]]; then
+    echo -e "${GREEN}All Codex install paths verified.${NC}"
+    warn "Codex skips new hooks until you trust them in /hooks"
+  else
+    err "Some Codex install paths are missing."
     return 1
   fi
 }

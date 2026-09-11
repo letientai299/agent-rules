@@ -99,12 +99,8 @@ install_cursor() {
   echo -e "${BOLD}Cursor / cursor-agent${NC}"
 
   local rules_dir="$TARGET_HOME/.cursor/rules"
-  mkdir -p "$TARGET_HOME/.cursor/hooks" "$rules_dir"
-
-  force_link "$REPO_ROOT/cursor/hooks/safe-git.sh" \
-    "$TARGET_HOME/.cursor/hooks/safe-git.sh" "cursor"
-  force_link "$REPO_ROOT/cursor/hooks/format-md.sh" \
-    "$TARGET_HOME/.cursor/hooks/format-md.sh" "cursor"
+  mkdir -p "$rules_dir"
+  link_shared_hooks "$TARGET_HOME/.cursor/hooks" "cursor"
 
   merge_hooks_json
 
