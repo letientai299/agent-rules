@@ -80,8 +80,8 @@ artifact.
 
 SHOULD produce a [Mermaid][mermaid] or [D2][d2] class/entity diagram in markdown
 when the model has more than 3 interrelated types. Place the diagram in the
-artifact file (`.ai.dump/<topic>/`), not in source code. The user's reviewing
-tool renders fenced diagram blocks.
+artifact file (`.ai/<topic>/`), not in source code. The user's reviewing tool
+renders fenced diagram blocks.
 
 [corrode]: https://corrode.dev/blog/illegal-state/
 [ts-du]:

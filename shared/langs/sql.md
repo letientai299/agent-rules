@@ -260,8 +260,8 @@ conditional validation belong in application code.
 
 The schema MUST be stable against feature evolution. Extending an existing
 feature's _value space_ (new adapter, new variant, new integration) MUST NOT
-require a migration. DDL changes are reserved for genuinely new data domains: new tables,
-new structural columns, new relationships.
+require a migration. DDL changes are reserved for genuinely new data domains:
+new tables, new structural columns, new relationships.
 
 Test: "If a product manager asks to support a new X, do I need a migration?"
 
@@ -356,8 +356,8 @@ the task artifact.
 
 SHOULD produce a [Mermaid][mermaid], [D2][d2], or [DBML][dbml] entity
 relationship diagram in markdown when the schema has more than 3 tables. Place
-the diagram in the artifact file (`.ai.dump/<topic>/`). The user's reviewing
-tool renders fenced diagram blocks.
+the diagram in the artifact file (`.ai/<topic>/`). The user's reviewing tool
+renders fenced diagram blocks.
 
 [dm]: ../data-modeling.md
 [ref]: ../../ref/db/sql-antipatterns.md

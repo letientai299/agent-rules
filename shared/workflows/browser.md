@@ -19,13 +19,13 @@ When either tool works, SHOULD prefer the one already configured in the session.
 
 The MCP browser server SHOULD be configured to use a non-default Chrome channel
 (canary or beta) so the agent does not block the user's default Chrome profile.
-When launching a browser programmatically, pass `--channel=canary` (preferred) or
-`--channel=beta` if the tool supports it.
+When launching a browser programmatically, pass `--channel=canary` (preferred)
+or `--channel=beta` if the tool supports it.
 
 ## Session & Auth
 
-- The MCP browser server SHOULD be configured with a persistent profile directory
-  so auth tokens, cookies, and customizations survive across sessions.
+- The MCP browser server SHOULD be configured with a persistent profile
+  directory so auth tokens, cookies, and customizations survive across sessions.
 - MUST NOT launch throwaway/incognito contexts for auth-required sites when the
   tool offers the choice.
 - When sharing a session with the user, MUST attach to the existing browser
@@ -39,14 +39,14 @@ When launching a browser programmatically, pass `--channel=canary` (preferred) o
 
 ## Focus & Disruption
 
-- SHOULD minimize focus disruption. Use `--autoConnect` with Chrome DevTools MCP.
-  Use `--headless` with Playwright when possible.
+- SHOULD minimize focus disruption. Use `--autoConnect` with Chrome DevTools
+  MCP. Use `--headless` with Playwright when possible.
 - When headful operation is required, SHOULD warn the user that focus stealing
   may occur.
 
 ## Screenshots & Artifacts
 
-- MUST save screenshots to `.ai.dump/<topic>/` — MUST NOT save to repo root.
+- MUST save screenshots to `.ai/<topic>/` — MUST NOT save to repo root.
 - SHOULD name files descriptively: `<step>-<description>.png` (e.g.,
   `01-login-form.png`, `02-dashboard-loaded.png`).
 

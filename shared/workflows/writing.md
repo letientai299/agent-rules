@@ -17,9 +17,9 @@ markdown structure.
 - MUST NOT restate code logic or inline comments in docs. Code is the source of
   truth; docs explain _why_ and _how to navigate_, not _what the code does line
   by line_. Link to the relevant file instead of paraphrasing it.
-- MUST NOT reference gitignored docs (e.g., `agents.local.md`, files in
-  `.ai.dump/`) from git-tracked documentation. If their content is needed,
-  consolidate the relevant information into the git-tracked docs instead.
+- MUST NOT reference gitignored docs (e.g., `agents.local.md`, files in `.ai/`)
+  from git-tracked documentation. If their content is needed, consolidate the
+  relevant information into the git-tracked docs instead.
 - MUST NOT surround file paths in output with punctuation like `.` or `,` —
   write `path/to/file` not `path/to/file.` so double-click selects the full path
   for terminal use.

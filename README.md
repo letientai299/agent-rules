@@ -26,7 +26,7 @@ other CLIs. However, the chatting UX has friction:
 **My solution**: move the discussion out of the prompt, into files.
 
 Agents write questions, proposals, reference info, and trade-offs to
-`.ai.dump/<topic>-q<num>.md`. I open the file in my editor, answer inline, check
+`.ai/<topic>-q<num>.md`. I open the file in my editor, answer inline, check
 reference links, adjust the design, add my own questions. When done, I tell the
 agent. It reads the file and prepares `q<num+1>` for follow-up questions, or
 finalizes the plan when no more blockers.
@@ -37,7 +37,7 @@ way feels like an ongoing discussion with a collaborator. Prompting feels like
 running a non-deterministic program.
 
 <details>
-<summary>Example Q&A file (<code>.ai.dump/git-worktree-rules-q1.md</code>). <code>Answer</code> are my responses to claude</summary>
+<summary>Example Q&A file (<code>.ai/git-worktree-rules-q1.md</code>). <code>Answer</code> are my responses to claude</summary>
 
 ```markdown
 # Git Worktree & Linear History — Rule Gaps
@@ -119,8 +119,8 @@ Clone this repo, then
 $ make claude
 ```
 
-That command will backup your global `claude` config into `.ai.dump/backup`,
-then make symlinks from the repo dir to correct place recognized `claude`.
+That command will backup your global `claude` config into `.ai/backup`, then
+make symlinks from the repo dir to correct place recognized `claude`.
 
 Run `make codex`, `make copilot`, or `make all` for all 3 agents. Codex and
 Copilot don't have the same level of support for runtime enforcements (via shell
@@ -141,15 +141,15 @@ no `git add -A`), [artifact conventions][artifacts], [research
 verification][research], [toolchain detection][tooling]. Agents may push back on
 your decisions, backed by evidence, not vibes.
 
-All artifacts go to `.ai.dump/`. Agents scan this dir automatically, no need to
-type full filenames.
+All artifacts go to `.ai/`. Agents scan this dir automatically, no need to type
+full filenames.
 
 ### Workflows (`shared/workflows/`)
 
 Loaded when the task triggers them.
 
-- **[Q&A-driven discussion][qa]**: questions in `.ai.dump/<topic>-q<num>.md`
-  with `**Answer:**` placeholders you fill in.
+- **[Q&A-driven discussion][qa]**: questions in `.ai/<topic>-q<num>.md` with
+  `**Answer:**` placeholders you fill in.
 - **[Code reviews][code-review]**: severity-ranked findings, status tracking.
 - **[Browser interaction][browser]**: Chrome DevTools MCP vs Playwright, session
   persistence, focus-stealing prevention.

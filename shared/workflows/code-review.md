@@ -4,9 +4,9 @@ Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
 When the user asks to review code (PR, file, diff, or general review):
 
-- MUST write the full review to `.ai.dump/<topic>/review-r<num>.md` where
-  `<num>` is the round number (r1, r2, r3, ...). MUST check existing files in
-  `.ai.dump/<topic>/` to continue numbering.
+- MUST write the full review to `.ai/<topic>/review-r<num>.md` where `<num>` is
+  the round number (r1, r2, r3, ...). MUST check existing files in
+  `.ai/<topic>/` to continue numbering.
 - When writing round 2+, MUST cross-reference the previous round with a relative
   link at the top (e.g., `Previous round: [review-r1.md](./review-r1.md)`). MUST
   NOT copy findings from previous rounds — only reference them. Each round's

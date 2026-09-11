@@ -15,16 +15,16 @@ apply:
 - The user explicitly says "discuss", "review design", "qa", or "q&a"
 
 MUST NOT ask the user whether to use Q&A — just do it. The user will not
-explicitly mention `.ai.dump/` or filenames — auto-discover and use the
-directory. MUST keep temp files in `.ai.dump/`, never in the repo root.
+explicitly mention `.ai/` or filenames — auto-discover and use the directory.
+MUST keep temp files in `.ai/`, never in the repo root.
 
 ## File Naming
 
-- MUST place Q&A files under `.ai.dump/<topic>/q<num>.md`.
+- MUST place Q&A files under `.ai/<topic>/q<num>.md`.
   - `<topic>` = short kebab-case slug derived from the task (e.g., `auth-flow`,
     `palette-ux`).
   - `<num>` = sequential within that topic (q1, q2, q3, ...).
-  - MUST check existing `.ai.dump/<topic>/` files to continue numbering.
+  - MUST check existing `.ai/<topic>/` files to continue numbering.
 
 ## File Picking
 
@@ -35,11 +35,11 @@ MUST infer the topic from the current conversation and open the latest
 
 ## Process
 
-- Questions go in `.ai.dump/<topic>/q<num>.md` files.
+- Questions go in `.ai/<topic>/q<num>.md` files.
 - SHOULD cross-reference earlier files with relative links:
   `[q1.md #4](./q1.md)`.
-- Research outputs go in `.ai.dump/<topic>/research.md` and SHOULD be linked
-  from the Q file.
+- Research outputs go in `.ai/<topic>/research.md` and SHOULD be linked from the
+  Q file.
 - Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
   (see [Artifacts in general.md][artifacts]).
 - SHOULD provide detailed analysis with reference links and concrete

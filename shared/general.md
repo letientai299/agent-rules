@@ -72,28 +72,28 @@ Applies to chat replies, code, comments, docs, and commit messages.
 
 ## Artifacts
 
-- All generated artifacts MUST go under `.ai.dump/<topic>/` in the **current
-  working directory** where the CLI agent session started (i.e., the directory
-  the user launched the agent from), NOT the git root or worktree root. The user
-  expects artifacts next to where they work. `<topic>` is a short kebab-case
-  slug derived from the task (e.g., `auth-flow`, `palette-ux`). MUST NOT place
-  them in the repo root, `tmp/`, or directly in `.ai.dump/`. `.ai.dump/` is
-  gitignored and disposable.
-- MUST check existing `.ai.dump/` subdirectories to avoid collisions and reuse
-  an existing `<topic>/` folder when the work is related.
+- All generated artifacts MUST go under `.ai/<topic>/` in the **current working
+  directory** where the CLI agent session started (i.e., the directory the user
+  launched the agent from), NOT the git root or worktree root. The user expects
+  artifacts next to where they work. `<topic>` is a short kebab-case slug
+  derived from the task (e.g., `auth-flow`, `palette-ux`). MUST NOT place them
+  in the repo root, `tmp/`, or directly in `.ai/`. `.ai/` is gitignored and
+  disposable.
+- MUST check existing `.ai/` subdirectories to avoid collisions and reuse an
+  existing `<topic>/` folder when the work is related.
 - **Artifact lookup:** when the user references an artifact by partial name
   (e.g., "check the research", "see q2", "read the review") without specifying
   the topic folder:
   1. Infer `<topic>` from the current conversation context.
-  2. Look for the file inside `.ai.dump/<topic>/`.
-  3. If no conversation context or no match, scan all `.ai.dump/*/` for the
-     basename. One match → use it. Multiple → ask the user to pick. None →
-     report not found.
+  2. Look for the file inside `.ai/<topic>/`.
+  3. If no conversation context or no match, scan all `.ai/*/` for the basename.
+     One match → use it. Multiple → ask the user to pick. None → report not
+     found.
 - Multiple agents may work on the same topic across sessions (one for research,
   another for planning, another for coding, another for review). All MUST use
-  the same `<topic>/` folder. MUST check existing `.ai.dump/<topic>/` contents
-  before creating new files.
-- Standard artifact names within `.ai.dump/<topic>/`:
+  the same `<topic>/` folder. MUST check existing `.ai/<topic>/` contents before
+  creating new files.
+- Standard artifact names within `.ai/<topic>/`:
 
   | Artifact          | Filename            | Notes                                                                                            |
   | ----------------- | ------------------- | ------------------------------------------------------------------------------------------------ |

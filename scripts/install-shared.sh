@@ -13,7 +13,7 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-BACKUP_DIR="$REPO_ROOT/.ai.dump/backup/$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="$REPO_ROOT/.ai/backup/$(date +%Y%m%d-%H%M%S)"
 DRY_RUN="${DRY_RUN:-false}"
 TARGET_HOME="${TARGET_HOME:-$HOME}"
 
@@ -132,7 +132,7 @@ install_shared() {
   echo -e "${BOLD}Global gitignore${NC}"
 
   local gitignore="$TARGET_HOME/.gitignore"
-  local entry=".ai.dump/"
+  local entry=".ai/"
 
   if [[ "$TARGET_HOME" != "$HOME" ]]; then
     if [[ "$DRY_RUN" == true ]]; then
@@ -142,7 +142,7 @@ install_shared() {
         echo "$entry" >> "$gitignore"
         log "Added '$entry' to $gitignore"
       else
-        log ".ai.dump/ already in $gitignore"
+        log ".ai/ already in $gitignore"
       fi
     fi
   else
@@ -157,7 +157,7 @@ install_shared() {
       if ! grep -qxF "$entry" "$gitignore" 2>/dev/null; then
         info "[dry-run] Would add '$entry' to $gitignore"
       else
-        log ".ai.dump/ already in $gitignore"
+        log ".ai/ already in $gitignore"
       fi
     else
       if [[ -z "$current_excludes" ]]; then
@@ -172,7 +172,7 @@ install_shared() {
         echo "$entry" >> "$gitignore"
         log "Added '$entry' to $gitignore"
       else
-        log ".ai.dump/ already in $gitignore"
+        log ".ai/ already in $gitignore"
       fi
     fi
   fi
