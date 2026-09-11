@@ -21,20 +21,6 @@
           }
         ]
       }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/gen-topic.py"
-          }
-        ]
-      }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline-command.sh"
   }
 }
