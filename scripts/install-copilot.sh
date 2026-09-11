@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Source shared installer for backup_and_link and variables
+# Source shared installer for force_link and variables
 # shellcheck source=install-shared.sh
 source "$SCRIPT_DIR/install-shared.sh"
 
@@ -18,9 +18,9 @@ install_copilot() {
     "$TARGET_HOME/.copilot/copilot-instructions.md" "copilot"
 
   # Hooks: symlink hooks directory and hooks.json
-  backup_and_link "$REPO_ROOT/copilot/hooks" \
+  force_link "$REPO_ROOT/copilot/hooks" \
     "$TARGET_HOME/.copilot/hooks" "copilot"
-  backup_and_link "$REPO_ROOT/copilot/hooks.json" \
+  force_link "$REPO_ROOT/copilot/hooks.json" \
     "$TARGET_HOME/.copilot/hooks.json" "copilot"
 
   # Verify

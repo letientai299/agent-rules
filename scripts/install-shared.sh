@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Shared installer — sets up ~/.agent-rules symlink and global gitignore.
-# Exports backup_and_link() for agent-specific installers to source.
+# Exports force_link() for agent-specific installers to source.
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -13,7 +13,6 @@ NC='\033[0m'
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-BACKUP_DIR="$REPO_ROOT/.ai/backup/$(date +%Y%m%d-%H%M%S)"
 DRY_RUN="${DRY_RUN:-false}"
 TARGET_HOME="${TARGET_HOME:-$HOME}"
 
@@ -37,31 +36,18 @@ warn() { echo -e "${YELLOW}!${NC} $1"; }
 info() { echo -e "${BLUE}→${NC} $1"; }
 err()  { echo -e "${RED}✗${NC} $1"; }
 
-backup_and_link() {
+force_link() {
   local source="$1"
   local target="$2"
   local label="$3"
 
   if [[ "$DRY_RUN" == true ]]; then
-    if [[ -e "$target" || -L "$target" ]]; then
-      info "[dry-run] Would backup $target → $BACKUP_DIR/"
-    fi
     info "[dry-run] Would symlink $target → $source"
     return
   fi
 
-  if [[ -e "$target" || -L "$target" ]]; then
-    mkdir -p "$BACKUP_DIR"
-    local backup_name
-    backup_name="$(basename "$target")"
-    local parent_label="${label//\//-}"
-    cp -RL "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || \
-      cp -R "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || true
-    warn "Backed up $target → $BACKUP_DIR/${parent_label}-${backup_name}"
-    rm -rf "$target"
-  fi
-
   mkdir -p "$(dirname "$target")"
+  rm -rf "$target"
   ln -sfn "$source" "$target"
   log "$label: $target → $source"
 }
@@ -84,25 +70,12 @@ copy_with_routing() {
   local label="$3"
 
   if [[ "$DRY_RUN" == true ]]; then
-    if [[ -e "$target" || -L "$target" ]]; then
-      info "[dry-run] Would backup $target → $BACKUP_DIR/"
-    fi
     info "[dry-run] Would copy $source → $target (with routing list)"
     return
   fi
 
-  if [[ -e "$target" || -L "$target" ]]; then
-    mkdir -p "$BACKUP_DIR"
-    local backup_name
-    backup_name="$(basename "$target")"
-    local parent_label="${label//\//-}"
-    cp -RL "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || \
-      cp -R "$target" "$BACKUP_DIR/${parent_label}-${backup_name}" 2>/dev/null || true
-    warn "Backed up $target → $BACKUP_DIR/${parent_label}-${backup_name}"
-    rm -rf "$target"
-  fi
-
   mkdir -p "$(dirname "$target")"
+  rm -rf "$target"
   cp "$source" "$target"
 
   # Replace everything between ROUTING markers with the generated list
@@ -125,7 +98,7 @@ copy_with_routing() {
 
 install_shared() {
   echo -e "${BOLD}Shared Rules${NC}"
-  backup_and_link "$REPO_ROOT" "$TARGET_HOME/.agent-rules" "shared"
+  force_link "$REPO_ROOT" "$TARGET_HOME/.agent-rules" "shared"
 
   # Global gitignore
   echo

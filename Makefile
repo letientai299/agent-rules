@@ -1,8 +1,8 @@
-.PHONY: all claude codex copilot opencode shared
+.PHONY: all claude codex copilot opencode cursor cursor-agent shared
 
 .DEFAULT_GOAL := claude
 
-all: claude codex copilot opencode
+all: claude codex copilot opencode cursor
 
 shared:
 	./scripts/install-shared.sh
@@ -18,3 +18,8 @@ copilot: shared
 
 opencode: shared
 	./scripts/install-opencode.sh
+
+cursor: shared
+	./scripts/install-cursor.sh
+
+cursor-agent: cursor

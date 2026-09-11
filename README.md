@@ -119,14 +119,20 @@ Clone this repo, then
 $ make claude
 ```
 
-That command will backup your global `claude` config into `.ai/backup`, then
-make symlinks from the repo dir to correct place recognized `claude`.
+That command overwrites the matching global `claude` paths with symlinks into
+this repo.
 
-Run `make codex`, `make copilot`, or `make all` for all 3 agents. Codex and
-Copilot don't have the same level of support for runtime enforcements (via shell
-script hooks), auto-discovering `rules/`, and following symlinks like Claude
-does, so their compliance isn't as good. I mostly use Claude and add support for
-other agents to get a similar UX when I need them.
+Run `make codex`, `make copilot`, `make cursor`, or `make all`.
+`make cursor-agent` is the same install as `make cursor`: Cursor IDE Agent and
+the `agent` / `cursor-agent` CLI both read `~/.cursor/rules` and
+`~/.cursor/hooks.json`.
+
+Codex and Copilot don't have the same level of support for runtime enforcements
+(via shell script hooks), auto-discovering `rules/`, and following symlinks like
+Claude does, so their compliance isn't as good. Cursor gets `.mdc` user rules
+plus `beforeShellExecution` / `afterFileEdit` hooks, closer to Claude than to
+Codex. I mostly use Claude and add support for other agents to get a similar UX
+when I need them.
 
 ## Rules
 
@@ -174,9 +180,11 @@ To add a language, create a file in `shared/langs/` and add a detection entry in
 
 To add a workflow, create a file in `shared/workflows/` with a descriptive
 `# heading` (e.g., `# Data modeling session`) and re-run `make`. Claude Code
-picks up the file automatically via symlinks. Codex and Copilot use the heading
-as a routing label in their generated instructions file, so the agent reads it
-only when the task matches.
+picks up the file automatically via symlinks. Cursor regenerates
+`~/.cursor/rules/agent-rules-*.mdc` from those headings (`alwaysApply` for
+general, globs for languages, description for workflows). Codex and Copilot use
+the heading as a routing label in their generated instructions file, so the
+agent reads it only when the task matches.
 
 For per-project rules, add `AGENTS.md` at any directory level. Agents load all
 of them from the project root down to the working directory. Closer files take

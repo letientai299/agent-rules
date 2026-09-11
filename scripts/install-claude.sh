@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Source shared installer for backup_and_link and variables
+# Source shared installer for force_link and variables
 # shellcheck source=install-shared.sh
 source "$SCRIPT_DIR/install-shared.sh"
 
@@ -12,8 +12,8 @@ install_claude() {
 
   mkdir -p "$TARGET_HOME/.claude"
 
-  backup_and_link "$REPO_ROOT/claude/CLAUDE.md"      "$TARGET_HOME/.claude/CLAUDE.md"     "claude"
-  backup_and_link "$REPO_ROOT/claude/hooks"           "$TARGET_HOME/.claude/hooks"         "claude"
+  force_link "$REPO_ROOT/claude/CLAUDE.md"      "$TARGET_HOME/.claude/CLAUDE.md"     "claude"
+  force_link "$REPO_ROOT/claude/hooks"           "$TARGET_HOME/.claude/hooks"         "claude"
 
   # Merge hooks config into existing settings.json (don't overwrite volatile fields).
   local settings="$TARGET_HOME/.claude/settings.json"
@@ -25,15 +25,13 @@ install_claude() {
       cp "$hooks_src" "$settings"
       log "claude: created $settings from hooks.json"
     else
-      # Remove symlink from previous installs before merging.
+      # Materialize a symlink from a previous install before merging.
       if [[ -L "$settings" ]]; then
-        local resolved
-        resolved="$(readlink "$settings")"
-        mkdir -p "$BACKUP_DIR"
-        cp -L "$settings" "$BACKUP_DIR/claude-settings.json" 2>/dev/null || true
-        warn "Backed up $settings → $BACKUP_DIR/claude-settings.json"
+        local tmpfile
+        tmpfile="$(mktemp)"
+        cp -L "$settings" "$tmpfile"
         rm "$settings"
-        cp "$BACKUP_DIR/claude-settings.json" "$settings"
+        mv "$tmpfile" "$settings"
       fi
       local tmpfile
       tmpfile="$(mktemp)"
@@ -57,11 +55,11 @@ install_claude() {
   if [[ "$DRY_RUN" != true ]]; then
     mkdir -p "$TARGET_HOME/.claude/rules"
   fi
-  backup_and_link "$REPO_ROOT/shared/general.md"  "$TARGET_HOME/.claude/rules/general.md"  "claude/rules"
-  backup_and_link "$REPO_ROOT/shared/workflows"   "$TARGET_HOME/.claude/rules/workflows"   "claude/rules"
+  force_link "$REPO_ROOT/shared/general.md"  "$TARGET_HOME/.claude/rules/general.md"  "claude/rules"
+  force_link "$REPO_ROOT/shared/workflows"   "$TARGET_HOME/.claude/rules/workflows"   "claude/rules"
   # local/agents.md is not git-tracked; only link when present.
   if [[ -f "$REPO_ROOT/local/agents.md" ]]; then
-    backup_and_link "$REPO_ROOT/local/agents.md"  "$TARGET_HOME/.claude/rules/local.md"  "claude/rules"
+    force_link "$REPO_ROOT/local/agents.md"  "$TARGET_HOME/.claude/rules/local.md"  "claude/rules"
   fi
 
   # Verify all symlinks resolve

@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Source shared installer for backup_and_link and variables
+# Source shared installer for force_link and variables
 # shellcheck source=install-shared.sh
 source "$SCRIPT_DIR/install-shared.sh"
 
@@ -13,9 +13,9 @@ install_opencode() {
 	local config_dir="$TARGET_HOME/.config/opencode"
 	mkdir -p "$config_dir"
 
-	backup_and_link "$REPO_ROOT/opencode/AGENTS.md" "$config_dir/AGENTS.md" "opencode"
-	backup_and_link "$REPO_ROOT/opencode/opencode.json" "$config_dir/opencode.json" "opencode"
-	backup_and_link "$REPO_ROOT/opencode/plugins" "$config_dir/plugins" "opencode"
+	force_link "$REPO_ROOT/opencode/AGENTS.md" "$config_dir/AGENTS.md" "opencode"
+	force_link "$REPO_ROOT/opencode/opencode.json" "$config_dir/opencode.json" "opencode"
+	force_link "$REPO_ROOT/opencode/plugins" "$config_dir/plugins" "opencode"
 
 	# Rules: individual symlinks so adding a workflow file is enough.
 	# Remove old rules symlink from previous installs before mkdir.
@@ -27,11 +27,11 @@ install_opencode() {
 	if [[ "$DRY_RUN" != true ]]; then
 		mkdir -p "$config_dir/rules"
 	fi
-	backup_and_link "$REPO_ROOT/shared/general.md" "$config_dir/rules/general.md" "opencode/rules"
-	backup_and_link "$REPO_ROOT/shared/workflows" "$config_dir/rules/workflows" "opencode/rules"
+	force_link "$REPO_ROOT/shared/general.md" "$config_dir/rules/general.md" "opencode/rules"
+	force_link "$REPO_ROOT/shared/workflows" "$config_dir/rules/workflows" "opencode/rules"
 	# local/agents.md is not git-tracked; only link when present.
 	if [[ -f "$REPO_ROOT/local/agents.md" ]]; then
-		backup_and_link "$REPO_ROOT/local/agents.md" "$config_dir/rules/local.md" "opencode/rules"
+		force_link "$REPO_ROOT/local/agents.md" "$config_dir/rules/local.md" "opencode/rules"
 	fi
 
 	# Verify all symlinks resolve

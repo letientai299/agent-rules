@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Source shared installer for backup_and_link and variables
+# Source shared installer for force_link and variables
 # shellcheck source=install-shared.sh
 source "$SCRIPT_DIR/install-shared.sh"
 
