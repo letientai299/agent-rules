@@ -56,43 +56,8 @@ lang_globs() {
 }
 
 merge_hooks_json() {
-  local settings="$TARGET_HOME/.cursor/hooks.json"
-  local hooks_src="$REPO_ROOT/cursor/hooks.json"
-
-  if [[ "$DRY_RUN" == true ]]; then
-    info "[dry-run] Would merge $hooks_src into $settings"
-    return
-  fi
-
-  mkdir -p "$TARGET_HOME/.cursor"
-
-  if [[ ! -f "$settings" ]]; then
-    cp "$hooks_src" "$settings"
-    log "cursor: created $settings from hooks.json"
-    return
-  fi
-
-  if [[ -L "$settings" ]]; then
-    local materialized
-    materialized="$(mktemp)"
-    cp -L "$settings" "$materialized"
-    rm "$settings"
-    mv "$materialized" "$settings"
-  fi
-
-  local tmpfile
-  tmpfile="$(mktemp)"
-  jq -s '
-    (.[0] // {version: 1, hooks: {}}) as $old |
-    .[1] as $new |
-    {
-      version: ($old.version // $new.version // 1),
-      hooks: (($old.hooks // {}) + ($new.hooks // {}))
-    }
-    + ($old | del(.version, .hooks))
-  ' "$settings" "$hooks_src" >"$tmpfile"
-  mv "$tmpfile" "$settings"
-  log "cursor: merged hooks into $settings"
+  merge_hooks_file "$TARGET_HOME/.cursor/hooks.json" \
+    "$REPO_ROOT/cursor/hooks.json" "cursor"
 }
 
 install_cursor() {

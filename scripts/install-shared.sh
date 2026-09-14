@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Shared installer — sets up ~/.agent-rules symlink and global gitignore.
-# Exports force_link() and link_shared_hooks() for agent-specific installers.
+# Exports force_link(), link_shared_hooks(), and merge_hooks_file().
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -68,6 +68,61 @@ link_shared_hooks() {
   fi
   force_link "$REPO_ROOT/shared/hooks/safe-git.sh" "$dest/safe-git.sh" "$label"
   force_link "$REPO_ROOT/shared/hooks/format-md.sh" "$dest/format-md.sh" "$label"
+}
+
+# Merge src hooks.json into dest: keep existing events, append new groups
+# whose command is not already present (idempotent; does not drop Orca hooks).
+merge_hooks_file() {
+  local dest="$1"
+  local src="$2"
+  local label="$3"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    info "[dry-run] Would merge $src into $dest"
+    return
+  fi
+
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ ! -f "$dest" ]]; then
+    cp "$src" "$dest"
+    log "$label: created $dest from $(basename "$src")"
+    return
+  fi
+
+  if [[ -L "$dest" ]]; then
+    local materialized
+    materialized="$(mktemp)"
+    cp -L "$dest" "$materialized"
+    rm "$dest"
+    mv "$materialized" "$dest"
+  fi
+
+  local tmpfile
+  tmpfile="$(mktemp)"
+  jq -s '
+    def cmds: [.. | .command? | select(type == "string")];
+    (.[0] // {}) as $old |
+    .[1] as $new |
+    ($old.hooks // {}) as $oh |
+    ($new.hooks // {}) as $nh |
+    (
+      reduce ($nh | to_entries[]) as $e (
+        $oh;
+        (.[$e.key] // [] | cmds) as $have |
+        .[$e.key] = (
+          (.[$e.key] // []) + [
+            $e.value[] | select(
+              (cmds | any(. as $c | ($have | index($c)) != null)) | not
+            )
+          ]
+        )
+      )
+    ) as $hooks |
+    $old + $new + {hooks: $hooks}
+  ' "$dest" "$src" >"$tmpfile"
+  mv "$tmpfile" "$dest"
+  log "$label: merged hooks into $dest"
 }
 
 generate_routing_list() {

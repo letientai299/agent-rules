@@ -45,6 +45,9 @@ Applies to chat replies, code, comments, docs, and commit messages.
 - When a hook or command blocks, MUST reply with one short sentence.
 - When work is done and verified, MUST say so plainly in one line. When it
   failed, MUST say so and quote the error.
+- MUST NOT use LaTeX math in terminal chat (`$...$`, `$$`, `\times`, `\le`,
+  `\mathrm`). Terminals do not render it. Write Unicode or ASCII
+  (`16 * 128 = 2048`, `≤`). LaTeX stays in markdown files that render KaTeX.
 
 ### Code
 

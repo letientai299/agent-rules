@@ -16,7 +16,8 @@ install_codex() {
   # Copy instead of symlink so we can inject the generated routing list
   copy_with_routing "$REPO_ROOT/codex/AGENTS.md" "$TARGET_HOME/.codex/AGENTS.md" "codex"
   link_shared_hooks "$TARGET_HOME/.codex/hooks" "codex"
-  force_link "$REPO_ROOT/codex/hooks.json" "$TARGET_HOME/.codex/hooks.json" "codex"
+  merge_hooks_file "$TARGET_HOME/.codex/hooks.json" \
+    "$REPO_ROOT/codex/hooks.json" "codex"
 
   # Verify
   echo
@@ -35,9 +36,15 @@ install_codex() {
     failed=1
   fi
 
+  if [[ -f "$TARGET_HOME/.codex/hooks.json" ]]; then
+    log "OK: $TARGET_HOME/.codex/hooks.json (merged)"
+  else
+    err "MISSING: $TARGET_HOME/.codex/hooks.json"
+    failed=1
+  fi
+
   local link
-  for link in "$TARGET_HOME/.codex/hooks.json" \
-              "$TARGET_HOME/.codex/hooks/safe-git.sh" \
+  for link in "$TARGET_HOME/.codex/hooks/safe-git.sh" \
               "$TARGET_HOME/.codex/hooks/format-md.sh"; do
     if [[ -L "$link" ]] && [[ -e "$link" ]]; then
       log "OK: $link"
