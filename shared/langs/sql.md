@@ -356,8 +356,9 @@ the task artifact.
 
 SHOULD produce a [Mermaid][mermaid], [D2][d2], or [DBML][dbml] entity
 relationship diagram in markdown when the schema has more than 3 tables. Place
-the diagram in the artifact file (`.ai/<topic>/`). The user's reviewing tool
-renders fenced diagram blocks.
+the diagram in the artifact file under the host-aware `<artifact-dir>` defined
+in [Artifacts][artifacts]. The user's reviewing tool renders fenced diagram
+blocks.
 
 [dm]: ../data-modeling.md
 [ref]: ../../ref/db/sql-antipatterns.md
@@ -380,3 +381,4 @@ renders fenced diagram blocks.
 [d2]: https://d2lang.com/
 [dbml]: https://dbml.dbdiagram.io/
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
+[artifacts]: ../general.md#artifacts

@@ -75,28 +75,51 @@ Applies to chat replies, code, comments, docs, and commit messages.
 
 ## Artifacts
 
-- All generated artifacts MUST go under `.ai/<topic>/` in the **current working
-  directory** where the CLI agent session started (i.e., the directory the user
-  launched the agent from), NOT the git root or worktree root. The user expects
-  artifacts next to where they work. `<topic>` is a short kebab-case slug
-  derived from the task (e.g., `auth-flow`, `palette-ux`). MUST NOT place them
+- MUST detect the host alias from `$LC_SSH_ALIAS` at session start. A non-empty
+  value identifies a remote host; use that value as `<host>`. When unset or
+  empty, use local artifact rules without a host suffix.
+- `<artifact-dir>` is `.ai/<topic>/<host>/` on remote hosts and `.ai/<topic>/`
+  locally. `<topic>` is a short kebab-case slug derived from the task (e.g.,
+  `auth-flow`, `palette-ux`). All artifact paths in workflow and language rules
+  MUST use this host-aware directory.
+- All lightweight generated artifacts MUST go under `<artifact-dir>` in the
+  **current working directory** where the CLI agent session started (i.e., the
+  directory the user launched the agent from), NOT the git root or worktree
+  root. The user expects artifacts next to where they work. MUST NOT place them
   in the repo root, `tmp/`, or directly in `.ai/`. `.ai/` is gitignored and
-  disposable.
+  disposable. It is bidirectionally synced between local and multiple remote
+  hosts.
+- All agents MUST NOT store heavyweight data under `.ai/`, including model
+  weights, datasets, caches, build outputs, and large logs, traces, or profiles.
+  Store these outside the synced tree in host-local storage. Keep only
+  lightweight artifacts under `<artifact-dir>`, such as reports, summaries, and
+  manifests; record the host, external path, and retrieval details when needed.
+  MUST NOT place symlinks to heavyweight data under `.ai/`.
+- Remote agents MUST work on their own host-specific data and produce
+  independent results. Unless explicitly asked, MUST ignore artifacts from other
+  remote hosts: do not read, modify, or use them as evidence. Local artifacts
+  directly under `.ai/<topic>/` are shared inputs for remote agents; remote
+  agents MUST keep their outputs and updates in their own host directory.
 - MUST check existing `.ai/` subdirectories to avoid collisions and reuse an
   existing `<topic>/` folder when the work is related.
 - **Artifact lookup:** when the user references an artifact by partial name
   (e.g., "check the research", "see q2", "read the review") without specifying
   the topic folder:
   1. Infer `<topic>` from the current conversation context.
-  2. Look for the file inside `.ai/<topic>/`.
-  3. If no conversation context or no match, scan all `.ai/*/` for the basename.
-     One match → use it. Multiple → ask the user to pick. None → report not
-     found.
+  2. Look for the file inside `<artifact-dir>`. Remote agents MAY also read
+     local shared inputs directly under `.ai/<topic>/`.
+  3. If no conversation context or no match, scan topic folders for the basename
+     within the allowed scope: local agents scan `.ai/*/`; remote agents scan
+     `.ai/*/<host>/` and local shared inputs directly under `.ai/*/`. MUST NOT
+     scan other hosts' directories unless explicitly asked. One match → use it.
+     Multiple → ask the user to pick. None → report not found.
 - Multiple agents may work on the same topic across sessions (one for research,
   another for planning, another for coding, another for review). All MUST use
-  the same `<topic>/` folder. MUST check existing `.ai/<topic>/` contents before
-  creating new files.
-- Standard artifact names within `.ai/<topic>/`:
+  the same `<topic>/` folder, with remote outputs separated by `<host>/`. MUST
+  check existing `<artifact-dir>` contents before creating new files. Number
+  artifacts within that directory, independently of other hosts and shared
+  inputs.
+- Standard artifact names within `<artifact-dir>` (lightweight files only):
 
   | Artifact          | Filename            | Notes                                                                                            |
   | ----------------- | ------------------- | ------------------------------------------------------------------------------------------------ |

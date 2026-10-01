@@ -46,7 +46,8 @@ or `--channel=beta` if the tool supports it.
 
 ## Screenshots & Artifacts
 
-- MUST save screenshots to `.ai/<topic>/` — MUST NOT save to repo root.
+- MUST save screenshots to the host-aware `<artifact-dir>` defined in
+  [Artifacts][artifacts] — MUST NOT save to repo root.
 - SHOULD name files descriptively: `<step>-<description>.png` (e.g.,
   `01-login-form.png`, `02-dashboard-loaded.png`).
 
@@ -73,3 +74,4 @@ or `--channel=beta` if the tool supports it.
   Use file output mode or switch to CDP MCP for observation-heavy tasks.
 
 [rfc2119]: https://www.ietf.org/rfc/rfc2119.txt
+[artifacts]: ../general.md#artifacts

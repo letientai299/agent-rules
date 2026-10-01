@@ -16,15 +16,17 @@ apply:
 
 MUST NOT ask the user whether to use Q&A — just do it. The user will not
 explicitly mention `.ai/` or filenames — auto-discover and use the directory.
-MUST keep temp files in `.ai/`, never in the repo root.
+MUST keep lightweight temp files in `<artifact-dir>`, never in the repo root.
+Heavyweight data MUST stay outside `.ai/` (see [Artifacts][artifacts]).
 
 ## File Naming
 
-- MUST place Q&A files under `.ai/<topic>/q<num>.md`.
+- MUST place Q&A files under `<artifact-dir>/q<num>.md`.
   - `<topic>` = short kebab-case slug derived from the task (e.g., `auth-flow`,
     `palette-ux`).
-  - `<num>` = sequential within that topic (q1, q2, q3, ...).
-  - MUST check existing `.ai/<topic>/` files to continue numbering.
+  - `<artifact-dir>` follows the host-aware [artifact rules][artifacts].
+  - `<num>` = sequential within that artifact directory (q1, q2, q3, ...).
+  - MUST check existing `<artifact-dir>/` files to continue numbering.
 
 ## File Picking
 
@@ -35,11 +37,11 @@ MUST infer the topic from the current conversation and open the latest
 
 ## Process
 
-- Questions go in `.ai/<topic>/q<num>.md` files.
+- Questions go in `<artifact-dir>/q<num>.md` files.
 - SHOULD cross-reference earlier files with relative links:
   `[q1.md #4](./q1.md)`.
-- Research outputs go in `.ai/<topic>/research.md` and SHOULD be linked from the
-  Q file.
+- Research outputs go in `<artifact-dir>/research.md` and SHOULD be linked from
+  the Q file.
 - Below each **Question:** block, MUST add an empty `**Answer:**` placeholder
   (see [Artifacts in general.md][artifacts]).
 - SHOULD provide detailed analysis with reference links and concrete

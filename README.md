@@ -108,10 +108,10 @@ quality standard, validated claims, ...
 
 Claude, Codex, and Cursor share `shared/hooks`: `safe-git.sh` blocks
 `git add -A` / `git add .`, and `format-md.sh` formats `*.md` after edits.
-OpenCode has equivalent plugins. Codex loads `~/.codex/hooks.json` and skips
-new hooks until you trust them in `/hooks`. The rest is prompt-level rules with
-[RFC 2119][rfc2119] severity (`MUST`/`SHOULD`/`MAY`) so the agent knows what it
-can bend and what it can't.
+OpenCode has equivalent plugins. Codex loads `~/.codex/hooks.json` and skips new
+hooks until you trust them in `/hooks`. The rest is prompt-level rules with [RFC
+2119][rfc2119] severity (`MUST`/`SHOULD`/`MAY`) so the agent knows what it can
+bend and what it can't.
 
 ## Install
 
@@ -147,15 +147,19 @@ no `git add -A`), [artifact conventions][artifacts], [research
 verification][research], [toolchain detection][tooling]. Agents may push back on
 your decisions, backed by evidence, not vibes.
 
-All artifacts go to `.ai/`. Agents scan this dir automatically, no need to type
-full filenames.
+Lightweight artifacts go to `.ai/<topic>/` locally and `.ai/<topic>/<host>/`
+remotely, using `$LC_SSH_ALIAS` as the host alias. Remote agents use local
+artifacts as shared inputs and produce independent results in their own host
+directory; they ignore other hosts unless explicitly asked. `.ai/` syncs
+bidirectionally across hosts, so heavyweight data stays outside it. Agents look
+up artifacts within this scope, without requiring full filenames.
 
 ### Workflows (`shared/workflows/`)
 
 Loaded when the task triggers them.
 
-- **[Q&A-driven discussion][qa]**: questions in `.ai/<topic>-q<num>.md` with
-  `**Answer:**` placeholders you fill in.
+- **[Q&A-driven discussion][qa]**: questions in the host-aware artifact
+  directory with `**Answer:**` placeholders you fill in.
 - **[Code reviews][code-review]**: severity-ranked findings, status tracking.
 - **[Browser interaction][browser]**: Chrome DevTools MCP vs Playwright, session
   persistence, focus-stealing prevention.

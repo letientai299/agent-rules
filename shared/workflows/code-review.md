@@ -2,11 +2,13 @@
 
 Key words MUST, MUST NOT, SHOULD, and MAY follow [RFC 2119][rfc2119].
 
+Use `<artifact-dir>` from the host-aware [artifact rules][artifacts].
+
 When the user asks to review code (PR, file, diff, or general review):
 
-- MUST write the full review to `.ai/<topic>/review-r<num>.md` where `<num>` is
-  the round number (r1, r2, r3, ...). MUST check existing files in
-  `.ai/<topic>/` to continue numbering.
+- MUST write the full review to `<artifact-dir>/review-r<num>.md` where `<num>`
+  is the round number (r1, r2, r3, ...). MUST check existing files in
+  `<artifact-dir>/` to continue numbering.
 - When writing round 2+, MUST cross-reference the previous round with a relative
   link at the top (e.g., `Previous round: [review-r1.md](./review-r1.md)`). MUST
   NOT copy findings from previous rounds — only reference them. Each round's
@@ -32,8 +34,8 @@ MUST organize findings by severity:
 
 - MUST reference specific `file:line` locations using relative paths from the
   workspace root (e.g., `src/utils/parse.ts:42`). In the review markdown file,
-  MUST use relative-path links so the reader can navigate directly (e.g.,
-  `[src/utils/parse.ts:42](../../src/utils/parse.ts)`).
+  MUST use relative-path links so the reader can navigate directly. Resolve
+  links from `<artifact-dir>`, including the extra host directory remotely.
 - MUST quote the problematic code snippet for **Critical** and **Important**
   findings only. For **Minor** findings, reference `file:line` without quoting.
 - MUST explain why it's a problem. SHOULD add online valid reference links.
