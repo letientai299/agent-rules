@@ -130,21 +130,6 @@ Applies to chat replies, code, comments, docs, and commit messages.
   | Screenshots       | `<step>-<desc>.png` | e.g., `01-login-form.png`                                                                        |
   | Test/debug output | Descriptive name    | Logs, traces, snapshots, profiles, coverage, benchmarks — any artifact from testing or debugging |
 
-- When creating or updating any artifact file (research, Q&A, code review, etc.)
-  MUST add an `## Authors` section at the bottom. Each entry is a list item with
-  a two-line indented continuation. Format: `<cli> (<model>)` where `<cli>` is
-  the CLI tool (claude, copilot, cursor, aider, etc.) and `<model>` is the
-  specific model it used (a CLI may use any model). Use local time.
-
-  ```
-  ## Authors
-
-  - 2026-02-28 14:30: claude (claude-opus-4-6)
-    Initial research on auth flow trade-offs
-  - 2026-03-01 09:15: copilot (o3)
-    Added OAuth2 PKCE comparison section
-  ```
-
 - When an artifact contains items needing user decision (questions, review
   findings, design choices), the first agent MUST add a `**Answer:**`
   placeholder for each. Other agents updating the file later MUST NOT write into
