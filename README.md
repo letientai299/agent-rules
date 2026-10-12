@@ -161,8 +161,9 @@ Loaded when the task triggers them.
 - **[Q&A-driven discussion][qa]**: questions in the host-aware artifact
   directory with `**Answer:**` placeholders you fill in.
 - **[Code reviews][code-review]**: severity-ranked findings, status tracking.
-- **[Browser interaction][browser]**: Chrome DevTools MCP vs Playwright, session
-  persistence, focus-stealing prevention.
+- **[Browser work][browser]**: `agent-browser` vs Chrome DevTools MCP, one
+  shared authenticated browser, extraction, downloads, offline capture and
+  userscripts.
 - **[Dev servers][dev-ports]**: Deterministic port selection for concurrent dev
   servers.
 - **[Writing conventions][writing]**: reference-style links, artifact

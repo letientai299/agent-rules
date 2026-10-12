@@ -180,7 +180,7 @@ relative to `~/.agent-rules/shared/workflows/`.
 | Writing or editing markdown (docs, READMEs, etc)  | `writing.md`       |
 | Design discussion, ambiguous task, Q&A            | `qa.md`            |
 | Code review (PR, file, diff)                      | `code-review.md`   |
-| Browser interaction or visual debugging           | `browser.md`       |
+| Browser extraction, automation or debugging       | `browser.md`       |
 | Interactive CLI/TUI tool (vim, fzf, less, REPLs)  | `tmux-tui.md`      |
 | Running dev servers (especially in worktrees)     | `dev-ports.md`     |
 | Working in a git worktree                         | `worktree.md`      |
